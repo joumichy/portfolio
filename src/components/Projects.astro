@@ -4,13 +4,15 @@ import Card from "./ui/Card.astro";
 import Badge from "./ui/Badge.astro";
 import Button from "./ui/Button.astro";
 import { projects } from "../data/projects";
+
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Section id="projects" title="Featured Projects">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {
       projects.map((project) => (
-        <a href={`/projects/${project.slug}`} class="block h-full">
+        <a href={`${baseUrl}projects/${project.slug}`} class="block h-full">
           <Card class="flex flex-col h-full group overflow-hidden hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
             <div class="flex-1">
               <div class="flex justify-between items-start mb-4">

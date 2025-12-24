@@ -45,7 +45,7 @@ export const projects: Project[] = [
             description: "From sign-up to social interaction.",
             steps: [
                 { title: "Onboarding", desc: "User sign-up via Auth service, profile creation, and initial interest selection." },
-                { title: "Discovery", desc: "Home feed loads personalized content cached in Redis." },
+                { title: "Discovery", desc: "Home feed loads personalized content based on user interests and interactions." },
                 { title: "Engagement", desc: "User likes/comments; events emitted to notification service." },
                 { title: "Real-time Chat", desc: "Direct connection established via WebSocket for instant messaging." }
             ]
