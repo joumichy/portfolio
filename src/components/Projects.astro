@@ -1,0 +1,74 @@
+---
+import Section from './ui/Section.astro';
+import Card from './ui/Card.astro';
+import Badge from './ui/Badge.astro';
+import Button from './ui/Button.astro';
+
+const projects = [
+  {
+    title: "MyPug - Social Network",
+    description: "Mobile social network for photo sharing with recommendation algorithms. Features real-time messaging, push notifications, and moderation tools.",
+    tech: ["Flutter", "NodeJS", "Express", "MongoDB", "AWS", "Socket.io"],
+    tags: ["Mobile", "Social"],
+    image: "/api/placeholder/400/320" // Placeholder, ideally use generate_image or user provided
+  },
+  {
+    title: "Bloden - Gaming App",
+    description: "Real-time mobile gaming app with betting and chat. Includes game engine synchronization and secure payment integration via Stripe.",
+    tech: ["Flutter", "NodeJS", "Socket.io", "Firebase", "Stripe"],
+    tags: ["Game", "Real-time"],
+    image: "/api/placeholder/400/320"
+  },
+  {
+    title: "Tootsweet Dashboard",
+    description: "Statistical analysis dashboard for B2C service optimization. Dynamic React Native UI with HapiJS data processing.",
+    tech: ["React Native", "TypeScript", "HapiJS", "MongoDB"],
+    tags: ["Analytics", "B2B"],
+    image: null
+  },
+  {
+    title: "YoutubeScrapper",
+    description: "Mobile app analyzing YouTube content to generate recommendations based on similarities. J2EE server-side processing.",
+    tech: ["Flutter", "J2EE", "MySQL", "GitLab"],
+    tags: ["AI/ML", "Scraper"],
+    image: null
+  },
+    {
+    title: "Robot Racer",
+    description: "Autonomous Raspberry Pi robot using real-time image processing to follow paths and Machine Learning for trajectory adjustment.",
+    tech: ["Python", "Raspberry Pi", "Computer Vision", "ML"],
+    tags: ["Robotics", "IoT"],
+    image: null
+  }
+];
+---
+
+<Section id="projects" title="Featured Projects">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {projects.map((project) => (
+      <Card class="flex flex-col h-full group overflow-hidden">
+        <div class="flex-1">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">{project.title}</h3>
+                <div class="flex gap-2">
+                    {project.tags.map(tag => <Badge text={tag} color="slate" />)}
+                </div>
+            </div>
+            
+            <p class="text-slate-400 mb-6 text-sm leading-relaxed">
+                {project.description}
+            </p>
+        </div>
+
+        <div class="mt-auto pt-4 border-t border-slate-800">
+            <div class="flex flex-wrap gap-2 mb-4">
+                {project.tech.map((t) => (
+                    <Badge text={t} color="indigo" />
+                ))}
+            </div>
+            <!-- <Button href="#" variant="outline" class="w-full text-sm py-2">View Details</Button> -->
+        </div>
+      </Card>
+    ))}
+  </div>
+</Section>

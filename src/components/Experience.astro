@@ -1,0 +1,119 @@
+---
+import Section from './ui/Section.astro';
+import Card from './ui/Card.astro';
+
+const experiences = [
+  {
+    company: "United Nations - WIPO",
+    role: "Senior Software Engineer",
+    period: "06/2025 - 12/2025",
+    location: "Lausanne",
+    description: "Led the complete redesign of the WIPO Lex architecture and platform. Modernized the system to boost performance and ensure long-term scalability.",
+    tech: ["Java (Spring Boot)", "Angular", "TypeScript", "AWS", "MySQL"],
+    achievements: [
+      "Restructured back-end into modular services",
+      "Implemented efficient caching and optimized queries",
+      "Introduced asynchronous data processing to reduce latency",
+      "Enhanced CI/CD pipelines and QC workflows"
+    ]
+  },
+  {
+    company: "ELCA",
+    role: "Senior Software Engineer",
+    period: "12/2022 - 03/2025",
+    location: "Lausanne",
+    description: "Software development and digital transformation for various major Swiss clients.",
+    tech: ["Android", "React", "DevOps", "Java", "Security"],
+    projects: [
+      { name: "BCV", desc: "Banking app with 100k+ users, QR payments, chatbot." },
+      { name: "Gesundheitsdatenraum", desc: "Lead dev for web portal. Secured with Auth2 OIDC." },
+      { name: "BCVS", desc: "Internal banking tools APIs for 34 branches." },
+      { name: "Loterie Romande", desc: "Interactive animations for online gaming platform." },
+      { name: "Abilis", desc: "E-health platform used by 500+ pharmacies." },
+      { name: "Edulog", desc: "User management and authentication systems." },
+      { name: "UNIGE", desc: "University of Geneva website redesign." }
+    ]
+  },
+  {
+    company: "Axileo (Orange / Bouygues)",
+    role: "Analyst Consultant",
+    period: "09/2021 - 11/2022",
+    location: "Paris",
+    description: "Engineering consulting for major telecom providers.",
+    tech: ["Frontend", "Backend", "API Integration"],
+    achievements: [
+      "Orange WH-A: Development & deployment of websites",
+      "MSCA Project: Commercial offer management for Orange/Bouygues/Free",
+      "CCA Project: Customer service intranet for subscriptions & billing"
+    ]
+  },
+  {
+    company: "Société Générale",
+    role: "Software Developer",
+    period: "09/2019 - 09/2021",
+    location: "Paris",
+    description: "Anti-fraud and terrorism financing software development.",
+    tech: ["Fullstack", "API Implementation", "CI/CD"],
+    achievements: [
+      "Developed anti-money laundering tool features",
+      "FILA-e Project Manager: Fraud monitoring & statistical analysis",
+      "Managed infrastructure of deployed server environments"
+    ]
+  }
+];
+---
+
+<Section id="experience" title="Experience">
+  <div class="relative border-l border-slate-800 ml-3 md:ml-6 space-y-12">
+    {experiences.map((exp) => (
+      <div class="relative pl-8 md:pl-12">
+        <!-- Timeline Dot -->
+        <span class="absolute -left-[5px] top-6 h-2.5 w-2.5 rounded-full bg-indigo-500 ring-4 ring-slate-900"></span>
+        
+        <Card class="relative">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-2">
+                <div>
+                    <h3 class="text-xl font-bold text-white">{exp.role}</h3>
+                    <div class="text-indigo-400 font-medium">{exp.company}</div>
+                </div>
+                <div class="text-slate-500 text-sm font-mono whitespace-nowrap bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800 w-fit">
+                    {exp.period} | {exp.location}
+                </div>
+            </div>
+
+            <p class="text-slate-400 mb-4">{exp.description}</p>
+
+            {exp.achievements && (
+                <ul class="list-disc list-outside ml-4 space-y-2 mb-4 text-slate-300">
+                    {exp.achievements.map((item) => (
+                        <li class="pl-1">{item}</li>
+                    ))}
+                </ul>
+            )}
+
+            {exp.projects && (
+                <div class="mb-4 space-y-3">
+                    <h4 class="text-sm font-semibold text-slate-200 uppercase tracking-wider">Key Projects:</h4>
+                    <div class="grid gap-3 md:grid-cols-2">
+                        {exp.projects.map((proj) => (
+                            <div class="bg-slate-900/50 p-3 rounded border border-slate-800/50">
+                                <div class="text-indigo-300 font-medium text-sm">{proj.name}</div>
+                                <div class="text-slate-500 text-xs">{proj.desc}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-slate-800/50">
+                {exp.tech.map((tech) => (
+                    <span class="text-xs font-mono text-indigo-300/80 bg-indigo-900/20 px-2 py-1 rounded">
+                        {tech}
+                    </span>
+                ))}
+            </div>
+        </Card>
+      </div>
+    ))}
+  </div>
+</Section>

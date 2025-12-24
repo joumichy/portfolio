@@ -1,0 +1,61 @@
+---
+import Section from './ui/Section.astro';
+import Card from './ui/Card.astro';
+
+const education = [
+  {
+    degree: "Master's Degree Software Architecture",
+    school: "ESGI",
+    location: "Paris",
+    period: "09/2019 - 07/2021"
+  },
+  {
+    degree: "Bachelor's Degree Computer Science (MIAGE)",
+    school: "Paris Descartes University",
+    location: "Paris",
+    period: "09/2018 - 05/2019"
+  }
+];
+
+const languages = [
+  { name: "French", level: "Native speaker" },
+  { name: "English", level: "Fluent" }
+];
+---
+
+<Section id="education" title="Education & Languages" class="bg-slate-900/30">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Education -->
+    <div class="space-y-6">
+      <h3 class="text-2xl font-semibold text-white flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        Education
+      </h3>
+      <div class="space-y-4">
+        {education.map((edu) => (
+          <div class="relative pl-6 border-l-2 border-indigo-500/30">
+            <h4 class="text-lg font-bold text-white">{edu.degree}</h4>
+            <div class="text-indigo-400">{edu.school}</div>
+            <div class="text-sm text-slate-500">{edu.period} | {edu.location}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="space-y-6">
+      <h3 class="text-2xl font-semibold text-white flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Languages
+      </h3>
+      <div class="grid gap-4">
+        {languages.map((lang) => (
+          <Card class="flex items-center justify-between p-4">
+            <span class="text-lg font-medium text-white">{lang.name}</span>
+            <span class="text-sm text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">{lang.level}</span>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </div>
+</Section>

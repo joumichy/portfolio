@@ -1,0 +1,59 @@
+---
+import Section from './ui/Section.astro';
+import Badge from './ui/Badge.astro';
+import Card from './ui/Card.astro';
+
+const skills = [
+  {
+    category: "Languages",
+    items: ["Java", "TypeScript", "Python", "JavaScript", "Dart", "HTML", "CSS"],
+    icon: "code",
+    color: "indigo"
+  },
+  {
+    category: "Frontend & Mobile",
+    items: ["React", "Angular", "Flutter", "React Native", "Android (Java)", "Astro", "TailwindCSS"],
+    icon: "layout",
+    color: "sky"
+  },
+  {
+    category: "Backend & Data",
+    items: ["Spring Boot", "Node.js", "Express", "Nest.js", "FastAPI", "PostgreSQL", "Oracle", "MongoDB", "DynamoDB", "Firebase", "Kafka", "RabbitMQ", "Elasticsearch"],
+    icon: "database",
+    color: "emerald"
+  },
+  {
+    category: "Cloud & DevOps",
+    items: ["AWS", "Azure", "Heroku", "Kubernetes", "Docker", "CI/CD (GitLab, Jenkins, CircleCI)", "Terraform"],
+    icon: "cloud",
+    color: "rose"
+  },
+  {
+    category: "Architecture & Tools",
+    items: ["Microservices", "REST API", "WebSocket", "SOLID", "Clean Code", "Scrum/Agile", "Jira", "Linux/Debian"],
+    icon: "box",
+    color: "slate"
+  }
+];
+---
+
+<Section id="skills" title="Technical Skills">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {skills.map((skillGroup) => (
+      <Card class="h-full">
+        <div class="flex items-center gap-3 mb-4">
+            <div class={`p-2 rounded-lg bg-${skillGroup.color}-500/10 text-${skillGroup.color}-400`}>
+             <!-- Simple Icon Placeholder since we don't have Lucide yet -->
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-100">{skillGroup.category}</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {skillGroup.items.map((item) => (
+            <Badge text={item} color={skillGroup.color as any} />
+          ))}
+        </div>
+      </Card>
+    ))}
+  </div>
+</Section>

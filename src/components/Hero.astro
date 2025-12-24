@@ -1,0 +1,136 @@
+---
+import Button from "./ui/Button.astro";
+---
+
+<section
+  class="relative min-h-[90vh] flex items-center justify-center overflow-hidden"
+>
+  <!-- Background Elements -->
+  <div class="absolute inset-0 z-0">
+    <!-- Abstract Circuit/Network Lines -->
+    <svg
+      class="absolute top-0 right-0 w-full h-full opacity-10"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M0,50 Q25,25 50,50 T100,50"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="0.5"
+        class="text-indigo-400"></path>
+      <path
+        d="M0,30 Q40,40 60,20 T100,40"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="0.5"
+        class="text-emerald-400"></path>
+      <circle
+        cx="50"
+        cy="50"
+        r="1"
+        class="text-indigo-500 fill-current animate-pulse"></circle>
+      <circle
+        cx="60"
+        cy="20"
+        r="1"
+        class="text-emerald-500 fill-current animate-pulse delay-75"></circle>
+    </svg>
+
+    <!-- Gradient Blobs -->
+    <div
+      class="absolute top-20 right-20 w-72 h-72 bg-indigo-500/20 rounded-full blur-[100px]"
+    >
+    </div>
+    <div
+      class="absolute bottom-20 left-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-[100px]"
+    >
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 z-10 relative">
+    <div class="max-w-4xl">
+      <div
+        class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-sm font-mono mb-6 backdrop-blur-sm"
+      >
+        <span class="relative flex h-2 w-2">
+          <span
+            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"
+          ></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"
+          ></span>
+        </span>
+        Available for new challenges
+      </div>
+
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
+        Hello, I'm <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-sky-400"
+          >John Allou</span
+        >
+      </h1>
+
+      <h2 class="text-2xl md:text-3xl font-light text-slate-300 mb-8">
+        Senior Software Engineer <span class="text-slate-600">|</span> Full Stack
+        Developer
+      </h2>
+
+      <p class="text-lg text-slate-400 max-w-2xl mb-10 leading-relaxed">
+        Specializing in building scalable, modular, and high-performance
+        architectures. Expert in Java (Spring Boot), TypeScript, and Cloud
+        Infrastructure (AWS). I modernize legacy systems and build robust
+        platforms that drive business value.
+      </p>
+
+      <div class="flex flex-wrap gap-4">
+        <Button href="#projects" variant="primary">
+          View Selected Projects
+        </Button>
+        <Button href="#contact" variant="secondary"> Contact Me </Button>
+        <Button
+          href="https://linkedin.com/in/john-allou"
+          variant="outline"
+          target="_blank"
+          class="gap-2"
+        >
+          LinkedIn
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-4 h-4"
+            ><path
+              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+            ></path><rect width="4" height="12" x="2" y="9"></rect><circle
+              cx="4"
+              cy="4"
+              r="2"></circle></svg
+          >
+        </Button>
+      </div>
+
+      <div
+        class="mt-16 pt-8 border-t border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-8"
+      >
+        <div>
+          <div class="text-3xl font-bold text-white">6+</div>
+          <div class="text-sm text-slate-400 font-mono">Years Exp.</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold text-white">12+</div>
+          <div class="text-sm text-slate-400 font-mono">Projects</div>
+        </div>
+        <div>
+          <div class="text-3xl font-bold text-white">CH</div>
+          <div class="text-sm text-slate-400 font-mono">Based</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
