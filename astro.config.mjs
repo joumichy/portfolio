@@ -8,8 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://joumichy.github.io",
-  base: "/portfolio/",
+  site: "https://john-on-tech.com/",
   vite: {
     plugins: [tailwindcss()]
   },
