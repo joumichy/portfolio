@@ -8,10 +8,12 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://john-allou.com',
+  site: "https://joumichy.github.io",
+  base: "/portfolio/",
   vite: {
     plugins: [tailwindcss()]
   },
 
   integrations: [react(), sitemap()]
 });
+
