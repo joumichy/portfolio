@@ -1,0 +1,45 @@
+---
+interface Props {
+  steps: { title: string; desc: string }[];
+}
+
+const { steps } = Astro.props;
+---
+
+<div class="relative py-8">
+  <!-- Vertical Line -->
+  <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-indigo-500/20 md:left-1/2 md:-ml-0.5"></div>
+
+  <div class="space-y-12">
+    {steps.map((step, index) => (
+      <div class:list={[
+        "relative flex items-center md:justify-between group",
+        index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+      ]}>
+        <!-- Step Dot -->
+        <div class="absolute left-8 -ml-3 h-6 w-6 rounded-full border-4 border-slate-950 bg-indigo-500 md:left-1/2 md:-ml-3 z-10"></div>
+        
+        <!-- Content Box -->
+        <div class:list={[
+          "ml-20 md:ml-0 md:w-[45%] p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-indigo-500/30 transition-all duration-300",
+          "relative"
+        ]}>
+            <!-- Arrow implementation via CSS borders -->
+            <div class:list={[
+                "hidden md:block absolute top-1/2 -mt-2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent",
+                index % 2 === 0 ? "-right-2 border-l-8 border-l-slate-800" : "-left-2 border-r-8 border-r-slate-800"
+            ]}></div>
+
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-bold text-white">{step.title}</h3>
+                <span class="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Step 0{index + 1}</span>
+            </div>
+            <p class="text-slate-400 text-sm">{step.desc}</p>
+        </div>
+        
+        <!-- Empty space for the other side (desktop only) -->
+        <div class="hidden md:block md:w-[45%]"></div>
+      </div>
+    ))}
+  </div>
+</div>

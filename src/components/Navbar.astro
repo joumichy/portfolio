@@ -1,43 +1,83 @@
 ---
 const links = [
-  { text: 'Home', href: '#' },
-  { text: 'Skills', href: '#skills' },
-  { text: 'Experience', href: '#experience' },
-  { text: 'Projects', href: '#projects' },
-  { text: 'Contact', href: '#contact' },
+  { text: "Home", href: "#" },
+  { text: "Skills", href: "#skills" },
+  { text: "Experience", href: "#experience" },
+  { text: "Projects", href: "#projects" },
+  { text: "Contact", href: "#contact" },
 ];
 ---
 
-<nav class="fixed w-full z-50 top-0 start-0 border-b border-indigo-500/10 bg-slate-950/80 backdrop-blur-md transition-all duration-300">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+<nav
+  class="fixed w-full z-50 top-0 start-0 border-b border-indigo-500/10 bg-slate-950/80 backdrop-blur-md transition-all duration-300"
+>
+  <div
+    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+  >
     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse group">
-      <div class="w-8 h-8 rounded bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-300">
+      <div
+        class="w-8 h-8 rounded bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform duration-300"
+      >
         J
       </div>
-      <span class="self-center text-xl font-semibold whitespace-nowrap text-white">John Allou</span>
+      <span
+        class="self-center text-xl font-semibold whitespace-nowrap text-white"
+        >John Allou</span
+      >
     </a>
-    
+
     <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-        <a href="/resume.pdf" target="_blank" class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-800 font-medium rounded-lg text-sm px-4 py-2 text-center transition-colors">
-          Download CV
-        </a>
-        <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-400 rounded-lg md:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600" aria-controls="navbar-sticky" aria-expanded="false">
-          <span class="sr-only">Open main menu</span>
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-          </svg>
+      <a
+        href="/resume.pdf"
+        target="_blank"
+        class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-800 font-medium rounded-lg text-sm px-4 py-2 text-center transition-colors"
+      >
+        Download CV
+      </a>
+      <button
+        data-collapse-toggle="navbar-sticky"
+        type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-slate-400 rounded-lg md:hidden hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-600"
+        aria-controls="navbar-sticky"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg
+          class="w-5 h-5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 17 14"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15"></path>
+        </svg>
       </button>
     </div>
-    
-    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-      <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-slate-800 rounded-lg bg-slate-900 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent">
-        {links.map(link => (
-          <li>
-            <a href={link.href} class="block py-2 px-3 text-slate-300 rounded hover:bg-slate-800 md:hover:bg-transparent md:hover:text-indigo-400 md:p-0 transition-colors">
-              {link.text}
-            </a>
-          </li>
-        ))}
+
+    <div
+      class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+      id="navbar-sticky"
+    >
+      <ul
+        class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-slate-800 rounded-lg bg-slate-900 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent"
+      >
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="block py-2 px-3 text-slate-300 rounded hover:bg-slate-800 md:hover:bg-transparent md:hover:text-indigo-400 md:p-0 transition-colors"
+              >
+                {link.text}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </div>
@@ -45,12 +85,14 @@ const links = [
 
 <script>
   // Mobile menu toggle
-  const button = document.querySelector('[data-collapse-toggle="navbar-sticky"]');
-  const menu = document.getElementById('navbar-sticky');
-  
+  const button = document.querySelector(
+    '[data-collapse-toggle="navbar-sticky"]',
+  );
+  const menu = document.getElementById("navbar-sticky");
+
   if (button && menu) {
-    button.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
+    button.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
     });
   }
 </script>
