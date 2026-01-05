@@ -1,0 +1,182 @@
+---
+interface Props {
+  label?: string;
+  width?: string;
+  height?: string;
+  color?: 'indigo' | 'sky' | 'emerald' | 'rose' | 'purple' | 'slate' | 'amber' | 'red' | 'green' | 'blue' | 'yellow' | 'pink' | 'violet';
+  bgOpacity?: string;
+  borderOpacity?: string;
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  borderWidth?: '0' | '1' | '2' | '4';
+  textSize?: 'xs' | 'sm' | 'base' | 'lg';
+  className?: string;
+  shape?: 'square' | 'rectangle' | 'circle';
+}
+
+const { 
+  label = '',
+  width = 'auto',
+  height = 'auto',
+  color = 'slate',
+  bgOpacity = '10',
+  borderOpacity = '100',
+  rounded = 'md',
+  borderWidth = '1',
+  textSize = 'sm',
+  className = '',
+  shape = 'rectangle'
+} = Astro.props;
+
+const colorClasses = {
+  indigo: {
+    border: `border-indigo-500/${borderOpacity}`,
+    bg: `bg-indigo-500/${bgOpacity}`,
+    text: 'text-indigo-300'
+  },
+  sky: {
+    border: `border-sky-500/${borderOpacity}`,
+    bg: `bg-sky-500/${bgOpacity}`,
+    text: 'text-sky-300'
+  },
+  emerald: {
+    border: `border-emerald-500/${borderOpacity}`,
+    bg: `bg-emerald-500/${bgOpacity}`,
+    text: 'text-emerald-300'
+  },
+  rose: {
+    border: `border-rose-500/${borderOpacity}`,
+    bg: `bg-rose-500/${bgOpacity}`,
+    text: 'text-rose-300'
+  },
+  purple: {
+    border: `border-purple-500/${borderOpacity}`,
+    bg: `bg-purple-500/${bgOpacity}`,
+    text: 'text-purple-300'
+  },
+  slate: {
+    border: `border-slate-600/${borderOpacity}`,
+    bg: `bg-slate-800/${bgOpacity}`,
+    text: 'text-slate-300'
+  },
+  amber: {
+    border: `border-amber-500/${borderOpacity}`,
+    bg: `bg-amber-500/${bgOpacity}`,
+    text: 'text-amber-300'
+  },
+  red: {
+    border: `border-red-500/${borderOpacity}`,
+    bg: `bg-red-500/${bgOpacity}`,
+    text: 'text-red-300'
+  },
+  green: {
+    border: `border-green-500/${borderOpacity}`,
+    bg: `bg-green-500/${bgOpacity}`,
+    text: 'text-green-300'
+  },
+  blue: {
+    border: `border-blue-500/${borderOpacity}`,
+    bg: `bg-blue-500/${bgOpacity}`,
+    text: 'text-blue-300'
+  },
+  yellow: {
+    border: `border-yellow-500/${borderOpacity}`,
+    bg: `bg-yellow-500/${bgOpacity}`,
+    text: 'text-yellow-300'
+  },
+  pink: {
+    border: `border-pink-500/${borderOpacity}`,
+    bg: `bg-pink-500/${bgOpacity}`,
+    text: 'text-pink-300'
+  },
+  violet: {
+    border: `border-violet-500/${borderOpacity}`,
+    bg: `bg-violet-500/${bgOpacity}`,
+    text: 'text-violet-300'
+  }
+};
+
+const roundedClasses = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  full: 'rounded-full'
+};
+
+const borderWidthClasses = {
+  '0': 'border-0',
+  '1': 'border',
+  '2': 'border-2',
+  '4': 'border-4'
+};
+
+const textSizeClasses = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg'
+};
+
+const shapeClasses = {
+  square: 'aspect-square',
+  rectangle: '',
+  circle: 'rounded-full aspect-square'
+};
+
+const colorScheme = colorClasses[color];
+
+// Mapping des tailles communes pour Tailwind
+const widthMap: Record<string, string> = {
+  '4': 'w-4',
+  '8': 'w-8',
+  '12': 'w-12',
+  '16': 'w-16',
+  '20': 'w-20',
+  '24': 'w-24',
+  '32': 'w-32',
+  'auto': ''
+};
+
+const heightMap: Record<string, string> = {
+  '4': 'h-4',
+  '8': 'h-8',
+  '12': 'h-12',
+  '16': 'h-16',
+  '20': 'h-20',
+  '24': 'h-24',
+  '32': 'h-32',
+  'auto': ''
+};
+
+const widthClass = widthMap[width] || '';
+const heightClass = heightMap[height] || '';
+const useInlineWidth = width !== 'auto' && !widthClass;
+const useInlineHeight = height !== 'auto' && !heightClass;
+
+const inlineStyles = {
+  ...(useInlineWidth && { width: width.includes('px') || width.includes('rem') || width.includes('%') ? width : `${width}rem` }),
+  ...(useInlineHeight && { height: height.includes('px') || height.includes('rem') || height.includes('%') ? height : `${height}rem` })
+};
+---
+
+<div 
+  class:list={[
+    'flex items-center justify-center',
+    'border',
+    colorScheme.border,
+    colorScheme.bg,
+    colorScheme.text,
+    roundedClasses[rounded],
+    borderWidthClasses[borderWidth],
+    textSizeClasses[textSize],
+    shapeClasses[shape],
+    widthClass,
+    heightClass,
+    className
+  ]}
+  style={Object.keys(inlineStyles).length > 0 ? inlineStyles : undefined}
+>
+  <slot>{label}</slot>
+</div>

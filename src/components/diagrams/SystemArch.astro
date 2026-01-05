@@ -1,4 +1,8 @@
 ---
+import DiagramBox from './DiagramBox.astro';
+import DiagramLine from './DiagramLine.astro';
+import DiagramContainer from './DiagramContainer.astro';
+
 interface Props {
   type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend';
 }
@@ -12,25 +16,157 @@ const { type } = Astro.props;
 
     <!-- Diagram Implementation -->
     {type === 'mobile-backend' && (
-         <div class="relative z-10 flex flex-col items-center gap-12 w-full max-w-lg">
+         <div class="relative z-10 flex flex-col items-center gap-8 w-full max-w-4xl">
             <!-- Mobile Client -->
-            <div class="flex items-center justify-center w-16 h-24 rounded-2xl border-2 border-slate-600 bg-slate-800 text-slate-300 shadow-xl">App</div>
+            <DiagramBox 
+                label="App Mobile"
+                width="20"
+                height="10"
+                color="slate"
+                rounded="2xl"
+                borderWidth="2"
+                className="shadow-xl"
+            />
             
-            <!-- Connection Lines -->
-            <div class="absolute top-[80px] w-0.5 h-16 bg-gradient-to-b from-slate-600 to-indigo-500"></div>
+            <!-- Connection Line to API Gateway -->
+            <DiagramLine 
+                direction="vertical"
+                length="6"
+                width="0.5"
+                color="indigo"
+                gradient={true}
+                gradientFrom="slate"
+                gradientTo="indigo"
+            />
             
-            <!-- Load Balancer / API Gateway -->
-            <div class="w-full grid grid-cols-2 gap-8">
-                <div class="flex flex-col items-center gap-4">
-                    <div class="px-6 py-3 rounded-lg border border-indigo-500 bg-indigo-500/10 text-indigo-300 font-mono text-sm">REST API</div>
-                    <div class="w-0.5 h-8 bg-slate-700"></div>
-                    <div class="p-4 rounded-full border border-emerald-500 bg-emerald-500/10 text-xs text-emerald-300">Database</div>
+            <!-- API Gateway -->
+            <div class="flex justify-center relative">
+                <DiagramBox 
+                    label="API Gateway"
+                    color="indigo"
+                    rounded="lg"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-8 py-4 font-mono shadow-lg relative z-10"
+                />
+            </div>
+            
+            <!-- Connection Lines Container - spans from API Gateway top to Services top -->
+            <div class="relative w-full" style="height: 80px;">
+                <svg class="absolute top-0 left-0 w-full h-full" style="pointer-events: none; overflow: visible; z-index: 5;">
+                    <!-- Connection to Chat Service (column 1, center at ~12.5%) -->
+                    <line 
+                        x1="50%" 
+                        y1="0" 
+                        x2="12.5%" 
+                        y2="100%" 
+                        stroke="rgb(99, 102, 241)" 
+                        stroke-width="2" 
+                        opacity="0.6"
+                        stroke-linecap="round"
+                    />
+                    
+                    <!-- Connection to Feed Service (column 2, center at ~37.5%) -->
+                    <line 
+                        x1="50%" 
+                        y1="0" 
+                        x2="37.5%" 
+                        y2="100%" 
+                        stroke="rgb(99, 102, 241)" 
+                        stroke-width="2" 
+                        opacity="0.6"
+                        stroke-linecap="round"
+                    />
+                    
+                    <!-- Connection to User Account Service (column 3, center at ~62.5%) -->
+                    <line 
+                        x1="50%" 
+                        y1="0" 
+                        x2="62.5%" 
+                        y2="100%" 
+                        stroke="rgb(99, 102, 241)" 
+                        stroke-width="2" 
+                        opacity="0.6"
+                        stroke-linecap="round"
+                    />
+                    
+                    <!-- Connection to Recommendation Service (column 4, center at ~87.5%) -->
+                    <line 
+                        x1="50%" 
+                        y1="0" 
+                        x2="87.5%" 
+                        y2="100%" 
+                        stroke="rgb(99, 102, 241)" 
+                        stroke-width="2" 
+                        opacity="0.6"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </div>
+            
+            <!-- Microservices Grid -->
+            <div class="w-full grid grid-cols-4 gap-4 items-start relative">
+                <!-- Chat Service -->
+                <div class="flex flex-col items-center gap-3">
+                    <DiagramBox 
+                        label="Chat Service"
+                        color="sky"
+                        rounded="lg"
+                        textSize="xs"
+                        borderWidth="2"
+                        className="px-3 py-2 font-mono w-full text-center"
+                    />
                 </div>
-                <div class="flex flex-col items-center gap-4">
-                    <div class="px-6 py-3 rounded-lg border border-sky-500 bg-sky-500/10 text-sky-300 font-mono text-sm">Socket.io</div>
-                    <div class="w-0.5 h-8 bg-slate-700"></div>
-                    <div class="p-4 rounded-full border border-rose-500 bg-rose-500/10 text-xs text-rose-300">Redis</div>
+                
+                <!-- Feed Service -->
+                <div class="flex flex-col items-center gap-3">
+                    <DiagramBox 
+                        label="Feed Service"
+                        color="purple"
+                        rounded="lg"
+                        textSize="xs"
+                        borderWidth="2"
+                        className="px-3 py-2 font-mono w-full text-center"
+                    />
                 </div>
+                
+                <!-- User Account Service -->
+                <div class="flex flex-col items-center gap-3">
+                    <DiagramBox 
+                        label="User Account"
+                        color="amber"
+                        rounded="lg"
+                        textSize="xs"
+                        borderWidth="2"
+                        className="px-3 py-2 font-mono w-full text-center"
+                    />
+                </div>
+                
+                <!-- Recommendation Service -->
+                <div class="flex flex-col items-center gap-3">
+                    <DiagramBox 
+                        label="Recommendation"
+                        color="rose"
+                        rounded="lg"
+                        textSize="xs"
+                        borderWidth="2"
+                        className="px-3 py-2 font-mono w-full text-center"
+                    />
+                </div>
+            </div>
+            
+
+            
+            <!-- Database -->
+            <div class="flex justify-center w-full mt-2">
+                <DiagramBox 
+                    label="Database"
+                    color="emerald"
+                    rounded="full"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-8 py-6 font-mono shadow-lg"
+                />
             </div>
          </div>
     )}
@@ -38,23 +174,96 @@ const { type } = Astro.props;
     {type === 'monolith' && (
         <div class="relative z-10 flex items-center justify-center gap-8 w-full">
             <div class="flex flex-col items-center gap-2">
-                <div class="w-12 h-12 rounded bg-slate-700 flex items-center justify-center border border-slate-600">UI</div>
-                <div class="w-1 h-20 bg-slate-700"></div>
+                <DiagramBox 
+                    label="UI"
+                    width="12"
+                    height="12"
+                    color="slate"
+                    rounded="md"
+                    shape="square"
+                />
+                <DiagramLine 
+                    direction="vertical"
+                    length="20"
+                    width="1"
+                    color="slate"
+                    opacity="70"
+                />
             </div>
             
-            <div class="p-8 rounded-xl border-2 border-indigo-500/50 bg-slate-900 shadow-2xl relative">
-                <div class="absolute -top-3 left-4 bg-slate-900 px-2 text-indigo-400 text-xs font-mono border border-indigo-500/50 rounded">Monolith</div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="w-16 h-16 rounded bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs text-indigo-300">Auth</div>
-                    <div class="w-16 h-16 rounded bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs text-indigo-300">Core</div>
-                    <div class="w-16 h-16 rounded bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs text-indigo-300">Data</div>
-                    <div class="w-16 h-16 rounded bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-xs text-indigo-300">Jobs</div>
-                </div>
-            </div>
+            <DiagramContainer 
+                label="Monolith"
+                labelPosition="top-left"
+                color="indigo"
+                borderOpacity="50"
+                rounded="xl"
+                borderWidth="2"
+                padding="md"
+                gridCols={2}
+                gap="md"
+                className="shadow-2xl"
+            >
+                <DiagramBox 
+                    label="Auth"
+                    width="16"
+                    height="16"
+                    color="indigo"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                />
+                <DiagramBox 
+                    label="Core"
+                    width="16"
+                    height="16"
+                    color="indigo"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                />
+                <DiagramBox 
+                    label="Data"
+                    width="16"
+                    height="16"
+                    color="indigo"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                />
+                <DiagramBox 
+                    label="Jobs"
+                    width="16"
+                    height="16"
+                    color="indigo"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                />
+            </DiagramContainer>
 
             <div class="flex flex-col items-center gap-2">
-                <div class="w-1 h-20 bg-slate-700"></div>
-                 <div class="px-4 py-2 rounded-lg border border-emerald-500 bg-emerald-500/10 text-emerald-300 font-mono text-sm">DB</div>
+                <DiagramLine 
+                    direction="vertical"
+                    length="20"
+                    width="1"
+                    color="slate"
+                    opacity="70"
+                />
+                <DiagramBox 
+                    label="DB"
+                    color="emerald"
+                    rounded="lg"
+                    textSize="sm"
+                    className="px-4 py-2 font-mono"
+                />
             </div>
         </div>
     )}
@@ -62,26 +271,84 @@ const { type } = Astro.props;
     {(type === 'serverless' || type === 'microservices') && (
         <div class="relative z-10 grid grid-cols-3 gap-8 items-center w-full max-w-2xl px-8">
              <div class="flex flex-col gap-4">
-                <div class="p-3 bg-slate-800 border border-slate-700 rounded text-center text-xs text-slate-400">Client A</div>
-                <div class="p-3 bg-slate-800 border border-slate-700 rounded text-center text-xs text-slate-400">Client B</div>
+                <DiagramBox 
+                    label="Client A"
+                    color="slate"
+                    rounded="md"
+                    textSize="xs"
+                    className="p-3 text-center"
+                />
+                <DiagramBox 
+                    label="Client B"
+                    color="slate"
+                    rounded="md"
+                    textSize="xs"
+                    className="p-3 text-center"
+                />
              </div>
 
              <div class="flex flex-col items-center justify-center gap-2">
-                <div class="w-12 h-12 rounded-full border-2 border-indigo-500 bg-indigo-500/20 flex items-center justify-center text-[10px] text-indigo-300 text-center leading-tight">API<br>GW</div>
+                <DiagramBox 
+                    label="API GW"
+                    width="12"
+                    height="12"
+                    color="indigo"
+                    rounded="full"
+                    shape="circle"
+                    borderWidth="2"
+                    textSize="xs"
+                    className="text-center leading-tight"
+                />
              </div>
 
              <div class="flex flex-col gap-6">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-0.5 bg-slate-600"></div>
-                    <div class="px-4 py-2 rounded border border-sky-500 bg-sky-500/10 text-sky-400 text-xs">Auth Func</div>
+                    <DiagramLine 
+                        direction="horizontal"
+                        length="8"
+                        width="0.5"
+                        color="slate"
+                        opacity="60"
+                    />
+                    <DiagramBox 
+                        label="Auth Func"
+                        color="sky"
+                        rounded="md"
+                        textSize="xs"
+                        className="px-4 py-2"
+                    />
                 </div>
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-0.5 bg-slate-600"></div>
-                    <div class="px-4 py-2 rounded border border-purple-500 bg-purple-500/10 text-purple-400 text-xs">Game State</div>
+                    <DiagramLine 
+                        direction="horizontal"
+                        length="8"
+                        width="0.5"
+                        color="slate"
+                        opacity="60"
+                    />
+                    <DiagramBox 
+                        label="Game State"
+                        color="purple"
+                        rounded="md"
+                        textSize="xs"
+                        className="px-4 py-2"
+                    />
                 </div>
                 <div class="flex items-center gap-2">
-                     <div class="w-8 h-0.5 bg-slate-600"></div>
-                    <div class="px-4 py-2 rounded border border-emerald-500 bg-emerald-500/10 text-emerald-400 text-xs">Payment</div>
+                    <DiagramLine 
+                        direction="horizontal"
+                        length="8"
+                        width="0.5"
+                        color="slate"
+                        opacity="60"
+                    />
+                    <DiagramBox 
+                        label="Payment"
+                        color="emerald"
+                        rounded="md"
+                        textSize="xs"
+                        className="px-4 py-2"
+                    />
                 </div>
              </div>
         </div>

@@ -1,0 +1,109 @@
+---
+interface Props {
+  direction?: 'horizontal' | 'vertical' | 'diagonal';
+  length?: string;
+  width?: string;
+  color?: 'indigo' | 'sky' | 'emerald' | 'rose' | 'purple' | 'slate' | 'amber' | 'red' | 'green' | 'blue' | 'yellow' | 'pink' | 'violet';
+  opacity?: string;
+  gradient?: boolean;
+  gradientFrom?: string;
+  gradientTo?: string;
+  className?: string;
+}
+
+const { 
+  direction = 'vertical',
+  length = '8',
+  width = '0.5',
+  color = 'slate',
+  opacity = '100',
+  gradient = false,
+  gradientFrom,
+  gradientTo,
+  className = ''
+} = Astro.props;
+
+const colorClasses = {
+  indigo: `bg-indigo-500/${opacity}`,
+  sky: `bg-sky-500/${opacity}`,
+  emerald: `bg-emerald-500/${opacity}`,
+  rose: `bg-rose-500/${opacity}`,
+  purple: `bg-purple-500/${opacity}`,
+  slate: `bg-slate-600/${opacity}`,
+  amber: `bg-amber-500/${opacity}`,
+  red: `bg-red-500/${opacity}`,
+  green: `bg-green-500/${opacity}`,
+  blue: `bg-blue-500/${opacity}`,
+  yellow: `bg-yellow-500/${opacity}`,
+  pink: `bg-pink-500/${opacity}`,
+  violet: `bg-violet-500/${opacity}`
+};
+
+const directionClasses = {
+  horizontal: 'w-full h-0',
+  vertical: 'w-0 h-full',
+  diagonal: 'w-full h-0.5'
+};
+
+const baseColor = colorClasses[color];
+
+// Mapping des gradients pour Tailwind (classes complètes)
+const gradientMap: Record<string, string> = {
+  'vertical-slate-indigo': 'bg-gradient-to-b from-slate-600 to-indigo-500',
+  'vertical-indigo-sky': 'bg-gradient-to-b from-indigo-500 to-sky-500',
+  'vertical-indigo-emerald': 'bg-gradient-to-b from-indigo-500 to-emerald-500',
+  'horizontal-slate-indigo': 'bg-gradient-to-r from-slate-600 to-indigo-500',
+  'horizontal-indigo-sky': 'bg-gradient-to-r from-indigo-500 to-sky-500',
+  'horizontal-indigo-emerald': 'bg-gradient-to-r from-indigo-500 to-emerald-500',
+};
+
+const getGradientClass = () => {
+  if (!gradient) return '';
+  const dir = direction === 'vertical' ? 'vertical' : 'horizontal';
+  const from = gradientFrom || color;
+  const to = gradientTo || color;
+  const key = `${dir}-${from}-${to}`;
+  return gradientMap[key] || '';
+};
+
+const widthMap: Record<string, string> = {
+  '0.5': 'w-0.5',
+  '1': 'w-1',
+  '2': 'w-2',
+  '4': 'w-4'
+};
+
+const lengthMap: Record<string, string> = {
+  '8': direction === 'vertical' ? 'h-8' : 'w-8',
+  '16': direction === 'vertical' ? 'h-16' : 'w-16',
+  '20': direction === 'vertical' ? 'h-20' : 'w-20',
+  '24': direction === 'vertical' ? 'h-24' : 'w-24'
+};
+
+const widthClass = widthMap[width] || '';
+const lengthClass = lengthMap[length] || '';
+const gradientClass = getGradientClass();
+
+const inlineStyles: Record<string, string> = {};
+if (!widthClass && width) {
+  inlineStyles.width = width.includes('px') || width.includes('rem') || width.includes('%') ? width : `${width}rem`;
+}
+if (!lengthClass && length) {
+  if (direction === 'vertical') {
+    inlineStyles.height = length.includes('px') || length.includes('rem') || length.includes('%') ? length : `${length}rem`;
+  } else {
+    inlineStyles.width = length.includes('px') || length.includes('rem') || length.includes('%') ? length : `${length}rem`;
+  }
+}
+---
+
+<div 
+  class:list={[
+    directionClasses[direction],
+    gradient ? gradientClass : baseColor,
+    widthClass,
+    lengthClass,
+    className
+  ]}
+  style={Object.keys(inlineStyles).length > 0 ? inlineStyles : undefined}
+></div>
