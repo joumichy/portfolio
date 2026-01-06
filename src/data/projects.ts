@@ -11,7 +11,7 @@ export interface Project {
     features: string[];
     architecture: {
         description: string;
-        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden';
+        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden'|'robot-racer';
     };
     userFlow: {
         description: string;
