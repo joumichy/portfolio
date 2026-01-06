@@ -4,7 +4,7 @@ import DiagramLine from './DiagramLine.astro';
 import DiagramContainer from './DiagramContainer.astro';
 
 interface Props {
-  type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend';
+  type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer';
 }
 
 const { type } = Astro.props;
@@ -351,6 +351,218 @@ const { type } = Astro.props;
                     />
                 </div>
              </div>
+        </div>
+    )}
+
+    {type === 'bloden' && (
+        <div class="relative z-10 flex items-center justify-center gap-8 w-full max-w-5xl">
+            <!-- External API: Stripe -->
+            <div class="flex flex-col items-center gap-3">
+                <DiagramBox 
+                    label="Stripe API"
+                    color="violet"
+                    rounded="lg"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-6 py-4 font-mono shadow-lg relative z-10"
+                />
+            </div>
+
+
+            <!-- Monolith Container -->
+            <div class="flex flex-col items-center gap-2 relative z-10">
+                <DiagramLine 
+                    direction="vertical"
+                    length="20"
+                    width="1"
+                    color="slate"
+                    opacity="70"
+                />
+                
+                <DiagramContainer 
+                    label="Monolith"
+                    labelPosition="top-left"
+                    color="indigo"
+                    borderOpacity="50"
+                    rounded="xl"
+                    borderWidth="2"
+                    padding="md"
+                    gridCols={2}
+                    gap="md"
+                    className="shadow-2xl"
+                >
+                    <DiagramBox 
+                        label="Auth"
+                        width="16"
+                        height="16"
+                        color="indigo"
+                        rounded="md"
+                        shape="square"
+                        bgOpacity="20"
+                        borderOpacity="30"
+                        textSize="xs"
+                    />
+                    <DiagramBox 
+                        label="Core"
+                        width="16"
+                        height="16"
+                        color="indigo"
+                        rounded="md"
+                        shape="square"
+                        bgOpacity="20"
+                        borderOpacity="30"
+                        textSize="xs"
+                    />
+                    <DiagramBox 
+                        label="Data"
+                        width="16"
+                        height="16"
+                        color="indigo"
+                        rounded="md"
+                        shape="square"
+                        bgOpacity="20"
+                        borderOpacity="30"
+                        textSize="xs"
+                    />
+                   
+                </DiagramContainer>
+
+                <DiagramLine 
+                    direction="vertical"
+                    length="20"
+                    width="1"
+                    color="slate"
+                    opacity="70"
+                />
+                
+                <DiagramBox 
+                    label="DB"
+                    color="emerald"
+                    rounded="lg"
+                    textSize="sm"
+                    className="px-4 py-2 font-mono"
+                />
+            </div>
+
+            <!-- External API: Game Results API -->
+            <div class="flex flex-col items-center gap-3">
+                <DiagramBox 
+                    label="Game Results API"
+                    color="pink"
+                    rounded="lg"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-6 py-4 font-mono shadow-lg relative z-10"
+                />
+            </div>
+        </div>
+    )}
+
+    {type === 'robot-racer' && (
+        <div class="relative z-10 flex flex-col items-center gap-8 w-full max-w-4xl">
+            <!-- Remote Control Client -->
+            <DiagramBox 
+                label="Remote Control"
+                color="slate"
+                rounded="lg"
+                textSize="sm"
+                borderWidth="2"
+                className="px-8 py-4 font-mono shadow-lg"
+            />
+            
+            <!-- Socket Connection -->
+            <div class="relative w-full" style="height: 60px;">
+                <svg class="absolute top-0 left-0 w-full h-full" style="pointer-events: none; overflow: visible;">
+                    <line 
+                        x1="50%" 
+                        y1="0" 
+                        x2="50%" 
+                        y2="100%" 
+                        stroke="rgb(14, 165, 233)" 
+                        stroke-width="2" 
+                        opacity="0.6"
+                        stroke-linecap="round"
+                        stroke-dasharray="5,5"
+                    />
+                </svg>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-900 px-3 py-1 rounded border border-sky-500/50">
+                    <span class="text-xs text-sky-400 font-mono">Socket.io</span>
+                </div>
+            </div>
+            
+            <!-- Robot Container -->
+            <DiagramContainer 
+                label="Robot Racer"
+                labelPosition="top-center"
+                color="sky"
+                borderOpacity="50"
+                rounded="xl"
+                borderWidth="2"
+                padding="sm"
+                gridCols={2}
+                gap="sm"
+                className="shadow-2xl w-3/8"
+            >
+                <!-- Socket Communication Module -->
+                <DiagramBox 
+                    label="Socket Comm"
+                    color="sky"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                    className="w-full"
+                />
+                
+                <!-- ML Module -->
+                <DiagramBox 
+                    label="ML Module"
+                    color="purple"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                    className="w-full"
+                />
+                
+                <!-- Autonomous Navigation -->
+                <DiagramBox 
+                    label="Auto Navigation"
+                    color="emerald"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                    className="w-full"
+                />
+                
+                <!-- Camera & Wheels Control -->
+                <DiagramBox 
+                    label="Camera & Wheels"
+                    color="amber"
+                    rounded="md"
+                    shape="square"
+                    bgOpacity="20"
+                    borderOpacity="30"
+                    textSize="xs"
+                    className="w-full"
+                />
+            </DiagramContainer>
+            
+            <!-- Environment Interaction -->
+            <div class="flex items-center gap-4 mt-4">
+                <DiagramBox 
+                    label="Environment Sensors"
+                    color="rose"
+                    rounded="lg"
+                    textSize="xs"
+                    borderWidth="2"
+                    className="px-4 py-2 font-mono"
+                />
+            </div>
         </div>
     )}
 </div>

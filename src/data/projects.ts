@@ -11,7 +11,7 @@ export interface Project {
     features: string[];
     architecture: {
         description: string;
-        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend';
+        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden';
     };
     userFlow: {
         description: string;
@@ -70,7 +70,7 @@ export const projects: Project[] = [
         ],
         architecture: {
             description: "Event-driven architecture. The core game loop runs on high-performance Node.js instances. Payment transactions are processed via a secured, isolated service interacting with Stripe webhooks. Firebase handles non-critical data like user stats and matchmaking queues.",
-            diagramType: "serverless"
+            diagramType: "bloden"
         },
         userFlow: {
             description: "The competitive gaming loop.",
@@ -164,7 +164,7 @@ export const projects: Project[] = [
         ],
         architecture: {
             description: "Embedded System Architecture. The Raspberry Pi runs a Python main loop that polls the Camera, processes the frame (OpenCV), calculates error (PID Controller), and adjusts PWM output to the Motor Driver HAT.",
-            diagramType: "microservices"
+            diagramType: "robot-racer"
         },
         userFlow: {
             description: "Autonomous operation loop.",
