@@ -1,0 +1,200 @@
+---
+interface Props {
+  label?: string;
+  labelPosition?: 'top-left' | 'top-right' | 'top-center' | 'bottom-left' | 'bottom-right' | 'bottom-center';
+  color?: 'indigo' | 'sky' | 'emerald' | 'rose' | 'purple' | 'slate' | 'amber' | 'red' | 'green' | 'blue' | 'yellow' | 'pink' | 'violet';
+  bgOpacity?: string;
+  borderOpacity?: string;
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  borderWidth?: '0' | '1' | '2' | '4';
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  gridCols?: number;
+  gap?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const { 
+  label = '',
+  labelPosition = 'top-left',
+  color = 'slate',
+  bgOpacity = '100',
+  borderOpacity = '50',
+  rounded = 'xl',
+  borderWidth = '2',
+  padding = 'md',
+  className = '',
+  gridCols,
+  gap = 'md'
+} = Astro.props;
+
+const colorClasses = {
+  indigo: {
+    border: `border-indigo-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-indigo-400',
+    labelBg: 'bg-slate-900'
+  },
+  sky: {
+    border: `border-sky-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-sky-400',
+    labelBg: 'bg-slate-900'
+  },
+  emerald: {
+    border: `border-emerald-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-emerald-400',
+    labelBg: 'bg-slate-900'
+  },
+  rose: {
+    border: `border-rose-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-rose-400',
+    labelBg: 'bg-slate-900'
+  },
+  purple: {
+    border: `border-purple-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-purple-400',
+    labelBg: 'bg-slate-900'
+  },
+  slate: {
+    border: `border-slate-600/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-slate-400',
+    labelBg: 'bg-slate-900'
+  },
+  amber: {
+    border: `border-amber-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-amber-400',
+    labelBg: 'bg-slate-900'
+  },
+  red: {
+    border: `border-red-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-red-400',
+    labelBg: 'bg-slate-900'
+  },
+  green: {
+    border: `border-green-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-green-400',
+    labelBg: 'bg-slate-900'
+  },
+  blue: {
+    border: `border-blue-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-blue-400',
+    labelBg: 'bg-slate-900'
+  },
+  yellow: {
+    border: `border-yellow-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-yellow-400',
+    labelBg: 'bg-slate-900'
+  },
+  pink: {
+    border: `border-pink-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-pink-400',
+    labelBg: 'bg-slate-900'
+  },
+  violet: {
+    border: `border-violet-500/${borderOpacity}`,
+    bg: `bg-slate-900`,
+    text: 'text-violet-400',
+    labelBg: 'bg-slate-900'
+  }
+};
+
+const roundedClasses = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  full: 'rounded-full'
+};
+
+const borderWidthClasses = {
+  '0': 'border-0',
+  '1': 'border',
+  '2': 'border-2',
+  '4': 'border-4'
+};
+
+const paddingClasses = {
+  none: 'p-0',
+  sm: 'p-4',
+  md: 'p-8',
+  lg: 'p-12',
+  xl: 'p-16'
+};
+
+const gapClasses = {
+  none: 'gap-0',
+  sm: 'gap-2',
+  md: 'gap-4',
+  lg: 'gap-6',
+  xl: 'gap-8'
+};
+
+const labelPositionClasses = {
+  'top-left': 'absolute -top-3 left-4',
+  'top-right': 'absolute -top-3 right-4',
+  'top-center': 'absolute -top-3 left-1/2 -translate-x-1/2',
+  'bottom-left': 'absolute -bottom-3 left-4',
+  'bottom-right': 'absolute -bottom-3 right-4',
+  'bottom-center': 'absolute -bottom-3 left-1/2 -translate-x-1/2'
+};
+
+const colorScheme = colorClasses[color];
+
+// Mapping des classes grid pour Tailwind
+const gridColsMap: Record<number, string> = {
+  1: 'grid grid-cols-1',
+  2: 'grid grid-cols-2',
+  3: 'grid grid-cols-3',
+  4: 'grid grid-cols-4',
+  5: 'grid grid-cols-5',
+  6: 'grid grid-cols-6'
+};
+
+const gridClass = gridCols ? (gridColsMap[gridCols] || 'grid') : '';
+---
+
+<div 
+  class:list={[
+    'relative',
+    'border',
+    colorScheme.border,
+    colorScheme.bg,
+    roundedClasses[rounded],
+    borderWidthClasses[borderWidth],
+    paddingClasses[padding],
+    gridClass,
+    gridCols ? gapClasses[gap] : '',
+    className
+  ]}
+>
+  {label && (
+    <div 
+      class:list={[
+        labelPositionClasses[labelPosition],
+        colorScheme.labelBg,
+        'px-2',
+        'text-xs',
+        'font-mono',
+        colorScheme.text,
+        'border',
+        colorScheme.border,
+        'rounded'
+      ]}
+    >
+      {label}
+    </div>
+  )}
+  <slot></slot>
+</div>
