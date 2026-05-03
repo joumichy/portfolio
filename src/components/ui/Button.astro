@@ -24,7 +24,12 @@ const variants = {
 
 {
   href ? (
-    <a href={href} class:list={[baseStyles, variants[variant], className]} target={target}>
+    <a
+      href={href}
+      class:list={[baseStyles, variants[variant], className]}
+      target={target}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
+    >
       <slot />
     </a>
   ) : (

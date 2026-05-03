@@ -4,7 +4,7 @@ import DiagramLine from './DiagramLine.astro';
 import DiagramContainer from './DiagramContainer.astro';
 
 interface Props {
-  type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer';
+  type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer' | 'shortlistable';
 }
 
 const { type } = Astro.props;
@@ -351,6 +351,126 @@ const { type } = Astro.props;
                     />
                 </div>
              </div>
+        </div>
+    )}
+
+    {type === 'shortlistable' && (
+        <div class="relative z-10 flex w-full max-w-5xl flex-col items-center gap-8">
+            <div class="grid w-full gap-4 md:grid-cols-3">
+                <DiagramBox
+                    label="Candidate Web App"
+                    color="sky"
+                    rounded="lg"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-5 py-4 font-mono text-center shadow-lg"
+                />
+                <DiagramBox
+                    label="Next.js Server Routes"
+                    color="indigo"
+                    rounded="lg"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-5 py-4 font-mono text-center shadow-lg"
+                />
+                <DiagramBox
+                    label="Async Export Jobs"
+                    color="purple"
+                    rounded="lg"
+                    textSize="sm"
+                    borderWidth="2"
+                    className="px-5 py-4 font-mono text-center shadow-lg"
+                />
+            </div>
+
+            <div class="relative hidden h-14 w-full md:block">
+                <svg class="absolute inset-0 h-full w-full overflow-visible" style="pointer-events: none;">
+                    <line x1="16.5%" y1="0" x2="50%" y2="100%" stroke="rgb(14, 165, 233)" stroke-width="2" opacity="0.55" stroke-linecap="round" />
+                    <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgb(99, 102, 241)" stroke-width="2" opacity="0.7" stroke-linecap="round" />
+                    <line x1="83.5%" y1="0" x2="50%" y2="100%" stroke="rgb(168, 85, 247)" stroke-width="2" opacity="0.55" stroke-linecap="round" />
+                </svg>
+            </div>
+
+            <DiagramContainer
+                label="Shortlistable Core"
+                labelPosition="top-center"
+                color="indigo"
+                borderOpacity="50"
+                rounded="xl"
+                borderWidth="2"
+                padding="md"
+                className="w-full shadow-2xl"
+            >
+                <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <DiagramBox
+                        label="Auth + Access"
+                        color="indigo"
+                        rounded="md"
+                        bgOpacity="20"
+                        borderOpacity="40"
+                        textSize="xs"
+                        className="min-h-20 px-3 py-4 text-center font-mono"
+                    />
+                    <DiagramBox
+                        label="CV Parser"
+                        color="emerald"
+                        rounded="md"
+                        bgOpacity="20"
+                        borderOpacity="40"
+                        textSize="xs"
+                        className="min-h-20 px-3 py-4 text-center font-mono"
+                    />
+                    <DiagramBox
+                        label="Match Engine"
+                        color="amber"
+                        rounded="md"
+                        bgOpacity="20"
+                        borderOpacity="40"
+                        textSize="xs"
+                        className="min-h-20 px-3 py-4 text-center font-mono"
+                    />
+                    <DiagramBox
+                        label="AI Tailoring"
+                        color="rose"
+                        rounded="md"
+                        bgOpacity="20"
+                        borderOpacity="40"
+                        textSize="xs"
+                        className="min-h-20 px-3 py-4 text-center font-mono"
+                    />
+                </div>
+            </DiagramContainer>
+
+            <div class="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <DiagramBox
+                    label="App Database"
+                    color="emerald"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="File Storage"
+                    color="sky"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="AI Provider"
+                    color="purple"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="Billing Provider"
+                    color="amber"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+            </div>
         </div>
     )}
 

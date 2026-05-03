@@ -6,12 +6,16 @@ export interface Project {
     tech: string[];
     tags: string[];
     image: string | null;
+    homepageImage?: string;
+    homepageImageAlt?: string;
+    projectUrl?: string;
     problem: string;
     solution: string;
     features: string[];
+    challenges?: string[];
     architecture: {
         description: string;
-        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden'|'robot-racer';
+        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer' | 'shortlistable';
     };
     userFlow: {
         description: string;
@@ -20,6 +24,47 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+    {
+        slug: "shortlistable",
+        title: "Shortlistable - AI CV Tailoring Platform",
+        description: "AI-powered SaaS that helps candidates create, analyze, tailor, and export recruiter-ready CVs matched to a specific job description.",
+        longDescription: "Shortlistable is a web platform for job seekers who want to move from a generic resume to an application-ready CV faster. Users can import a PDF or DOCX, create a strong base CV, paste a job description, receive an AI match analysis, rewrite high-impact sections, and export a polished version for recruiters and ATS systems.",
+        tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "AI/NLP", "Document Parsing", "PDF Export"],
+        tags: ["SaaS", "AI"],
+        image: null,
+        homepageImage: "/projects/shortlistable-home.png",
+        homepageImageAlt: "Shortlistable homepage showing the AI-powered CV tailoring workflow",
+        projectUrl: "https://www.shortlistable.com/en",
+        problem: "Job seekers often rewrite CVs manually for each application, but they do not know which keywords, experience bullets, or evidence gaps matter most. That creates slow application cycles and generic resumes that can be ignored by ATS filters or recruiters.",
+        solution: "Shortlistable centralizes the flow: import or build a base CV, analyze the target role, surface missing keywords and weak evidence, guide AI-assisted rewrites, then export a cleaner, role-specific CV without losing the user's original profile.",
+        features: [
+            "PDF/DOCX resume import and structured CV builder",
+            "Job description analysis with match scoring",
+            "ATS keyword gap detection and rewrite suggestions",
+            "AI-assisted tailoring with user validation before export",
+            "Export-ready CV workflow and subscription access"
+        ],
+        challenges: [
+            "Parsing heterogeneous resumes while preserving enough structure for editing and export.",
+            "Keeping AI suggestions truthful: the system must improve wording and evidence without inventing skills or experience.",
+            "Balancing ATS optimization with human readability so the final CV does not become keyword-stuffed.",
+            "Designing a workflow that feels fast for repeated applications while still giving users control over every generated change."
+        ],
+        architecture: {
+            description: "A full-stack SaaS architecture centered on a Next.js application. The web client handles onboarding, editing, previews, and billing entry points. Server-side routes coordinate authentication, subscription access, document parsing, AI matching, rewrite generation, and export jobs. Persistent storage keeps user profiles, base CVs, tailored versions, job analyses, and billing state, while external AI and payment providers stay isolated behind server-side adapters.",
+            diagramType: "shortlistable"
+        },
+        userFlow: {
+            description: "From an existing resume to a tailored, export-ready application.",
+            steps: [
+                { title: "Import CV", desc: "User uploads a PDF/DOCX resume or starts from an empty structured CV." },
+                { title: "Target Role", desc: "User pastes a job description; backend extracts requirements, keywords, and soft-skill signals." },
+                { title: "AI Match Analysis", desc: "System compares the CV against the role, computes a match score, and highlights missing evidence." },
+                { title: "Tailor & Validate", desc: "User reviews AI rewrite suggestions before applying them to headline, skills, and experience bullets." },
+                { title: "Export", desc: "Application-ready CV is generated and exported for the target role." }
+            ]
+        }
+    },
     {
         slug: "mypug-social-network",
         title: "MyPug - Social Network",
