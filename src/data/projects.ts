@@ -6,12 +6,17 @@ export interface Project {
     tech: string[];
     tags: string[];
     image: string | null;
+    homepageImage?: string;
+    homepageImageAlt?: string;
+    projectUrl?: string;
     problem: string;
     solution: string;
     features: string[];
+    challenges?: string[];
+    stackGroups?: { title: string; items: string[] }[];
     architecture: {
         description: string;
-        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden'|'robot-racer';
+        diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer' | 'shortlistable';
     };
     userFlow: {
         description: string;
@@ -20,6 +25,82 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+    {
+        slug: "shortlistable",
+        title: "Shortlistable - AI CV Tailoring Platform",
+        description: "AI-powered SaaS that helps candidates create, analyze, tailor, and export recruiter-ready CVs matched to a specific job description.",
+        longDescription: "Shortlistable is a full-stack web platform for job seekers who want to move from a generic resume to an application-ready CV faster. Users import a PDF or DOCX, create a structured base CV, paste a job description, receive an AI match analysis, trigger asynchronous parsing/rewrite/export jobs, and download a polished version for recruiters and ATS systems.",
+        tech: ["Next.js 16", "React 19", "TypeScript", "FastAPI", "Python 3.12", "PostgreSQL", "Supabase", "Redis", "RQ", "Docker", "Nginx", "Stripe", "OpenAI/Ollama", "Playwright"],
+        tags: ["SaaS", "AI"],
+        image: null,
+        homepageImage: "/projects/shortlistable-home.png",
+        homepageImageAlt: "Shortlistable homepage showing the AI-powered CV tailoring workflow",
+        projectUrl: "https://www.shortlistable.com/en",
+        problem: "Job seekers often rewrite CVs manually for each application, but they do not know which keywords, experience bullets, or evidence gaps matter most. That creates slow application cycles and generic resumes that can be ignored by ATS filters or recruiters.",
+        solution: "Shortlistable centralizes the flow: import or build a base CV, analyze the target role, surface missing keywords and weak evidence, enqueue long-running parsing/rewrite/export work through Redis/RQ, then guide the user toward a cleaner, role-specific CV without losing the original profile.",
+        features: [
+            "PDF/DOCX resume import and structured CV builder",
+            "Job description analysis with match scoring",
+            "ATS keyword gap detection and rewrite suggestions",
+            "AI-assisted tailoring with user validation before export",
+            "Redis/RQ queues with dedicated AI and PDF workers",
+            "Server-sent job status updates for long-running processing",
+            "Export-ready CV workflow and subscription access"
+        ],
+        challenges: [
+            "Parsing heterogeneous resumes while preserving enough structure for editing and export.",
+            "Keeping AI suggestions truthful: the system must improve wording and evidence without inventing skills or experience.",
+            "Balancing ATS optimization with human readability so the final CV does not become keyword-stuffed.",
+            "Moving expensive document parsing, OpenAI/Ollama calls, ATS scoring, section enrichment, and Playwright PDF rendering into queue-backed workers so the UI remains responsive.",
+            "Designing retries, TTLs, worker heartbeats, SSE job streams, and failure states for background work that depends on external AI and document services.",
+            "Designing a workflow that feels fast for repeated applications while still giving users control over every generated change."
+        ],
+        stackGroups: [
+            {
+                title: "Frontend & Product",
+                items: ["Next.js 16 App Router", "React 19", "TypeScript", "Tailwind CSS 4", "next-intl", "next-themes", "Radix UI", "Lucide React", "Framer Motion", "Tiptap editor", "React Hook Form", "Zod", "Sonner", "Vercel Analytics", "Responsive marketing pages", "SEO sitemap"]
+            },
+            {
+                title: "Backend & API",
+                items: ["Python 3.12", "FastAPI", "Uvicorn", "Pydantic v2", "Pydantic Settings", "SQLAlchemy 2", "psycopg2", "python-jose", "FastAPI middleware", "CORS", "Auth middleware", "Rate limit middleware", "Health routes", "REST API routers"]
+            },
+            {
+                title: "AI & Documents",
+                items: ["OpenAI SDK", "Ollama fallback", "LLM factory", "CV parser", "Job-fit recommendation service", "ATS scoring", "ATS verification", "Section enrichment", "Prompt injection checks", "PII hashing", "pdfminer.six", "python-docx", "PyMuPDF", "ODF parsing", "Pandas", "OpenPyXL"]
+            },
+            {
+                title: "Workers & Queue",
+                items: ["Redis", "RQ", "Queue ai", "Queue pdf", "worker-ai", "worker-pdf", "SpawnWorker on macOS", "SimpleWorker on Windows", "Retry/backoff intervals", "Result TTL", "Failure TTL", "Worker heartbeat", "SSE job stream", "Job result endpoint", "RQ Dashboard", "RedisInsight"]
+            },
+            {
+                title: "Data & Storage",
+                items: ["PostgreSQL", "Supabase Auth", "Supabase client", "Supabase service role", "Supabase Storage", "CV_FILES bucket", "CV_PHOTOS bucket", "CV_PREVIEWS bucket", "CV_TEMPLATES bucket", "User profiles", "CV versions", "Job analyses", "Billing catalog", "Subscription state"]
+            },
+            {
+                title: "Infrastructure & Ops",
+                items: ["Vercel web hosting", "Docker", "Docker Compose", "Production Compose stack", "Nginx reverse proxy", "Basic auth for admin tools", "uv lockfile", "python:3.12-slim", "Playwright Chromium install", "Redis appendonly persistence", "Environment-based config", "Shell/PowerShell launchers", "Structured logging", "Rotating log files"]
+            },
+            {
+                title: "Integrations",
+                items: ["Stripe subscriptions", "Stripe checkout", "Stripe billing catalog", "Stripe webhooks", "OpenAI API", "Ollama local models", "Supabase password recovery", "Supabase signup confirmation", "Next.js API proxy", "Browser auth session", "Remotion SEO video generation"]
+            }
+        ],
+        architecture: {
+            description: "The production system is split between `matchcv_web` and `matchcv_backend`. The web app is a Next.js 16/React 19 client deployed on Vercel; it owns the product UI, localized SEO pages, Supabase browser session handling, API proxy routes, and SSE job-stream consumption. The backend is a Python 3.12 FastAPI service behind Nginx, with auth/rate-limit middleware, SQLAlchemy repositories, Supabase Auth/Storage integration, Stripe billing routes and webhook handlers, and AI/document services. Long-running work is handled by Redis + RQ: requests enqueue jobs into the `ai` or `pdf` queues, `worker-ai` processes CV parsing, ATS scoring, job-fit recommendations, and section enrichment, while `worker-pdf` runs Playwright/Chromium PDF rendering. Job status is exposed through `/api/jobs/{id}`, `/stream`, and `/result`, with retries, TTLs, worker heartbeat checks, rq-dashboard, and RedisInsight for queue operations.",
+            diagramType: "shortlistable"
+        },
+        userFlow: {
+            description: "From an existing resume to a tailored, export-ready application.",
+            steps: [
+                { title: "Import CV", desc: "User uploads a PDF/DOCX resume or starts from an empty structured CV." },
+                { title: "Target Role", desc: "User pastes a job description; backend extracts requirements, keywords, and soft-skill signals." },
+                { title: "Queue Processing", desc: "FastAPI enqueues AI or PDF jobs in Redis/RQ; the web app follows progress through SSE." },
+                { title: "AI Match Analysis", desc: "worker-ai compares the CV against the role, computes a match score, and highlights missing evidence." },
+                { title: "Tailor & Validate", desc: "User reviews AI rewrite suggestions before applying them to headline, skills, and experience bullets." },
+                { title: "Export", desc: "worker-pdf renders the final CV with Playwright/Chromium and returns an export-ready PDF." }
+            ]
+        }
+    },
     {
         slug: "mypug-social-network",
         title: "MyPug - Social Network",

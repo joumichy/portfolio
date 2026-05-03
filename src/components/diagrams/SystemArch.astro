@@ -4,7 +4,7 @@ import DiagramLine from './DiagramLine.astro';
 import DiagramContainer from './DiagramContainer.astro';
 
 interface Props {
-  type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer';
+  type: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer' | 'shortlistable';
 }
 
 const { type } = Astro.props;
@@ -351,6 +351,264 @@ const { type } = Astro.props;
                     />
                 </div>
              </div>
+        </div>
+    )}
+
+    {type === 'shortlistable' && (
+        <div class="relative z-10 w-full max-w-6xl">
+            <div class="grid gap-6 xl:grid-cols-[0.9fr_1.25fr_1fr]">
+                <div class="flex flex-col gap-4">
+                    <DiagramContainer
+                        label="Client Layer"
+                        labelPosition="top-center"
+                        color="sky"
+                        borderOpacity="50"
+                        rounded="xl"
+                        borderWidth="2"
+                        padding="sm"
+                        className="h-full"
+                    >
+                        <div class="flex flex-col gap-3">
+                            <DiagramBox
+                                label="Browser"
+                                color="sky"
+                                rounded="lg"
+                                textSize="xs"
+                                className="px-4 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="Vercel CDN"
+                                color="blue"
+                                rounded="lg"
+                                textSize="xs"
+                                className="px-4 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="Next.js 16 Web"
+                                color="indigo"
+                                rounded="lg"
+                                textSize="xs"
+                                className="px-4 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="API Proxy + SSE"
+                                color="purple"
+                                rounded="lg"
+                                textSize="xs"
+                                className="px-4 py-3 font-mono text-center"
+                            />
+                        </div>
+                    </DiagramContainer>
+                </div>
+
+                <DiagramContainer
+                    label="Backend Core"
+                    labelPosition="top-center"
+                    color="indigo"
+                    borderOpacity="50"
+                    rounded="xl"
+                    borderWidth="2"
+                    padding="sm"
+                    className="shadow-2xl"
+                >
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <DiagramBox
+                            label="Nginx Proxy"
+                            color="indigo"
+                            rounded="md"
+                            bgOpacity="20"
+                            borderOpacity="40"
+                            textSize="xs"
+                            className="min-h-16 px-3 py-3 text-center font-mono"
+                        />
+                        <DiagramBox
+                            label="FastAPI / Uvicorn"
+                            color="indigo"
+                            rounded="md"
+                            bgOpacity="20"
+                            borderOpacity="40"
+                            textSize="xs"
+                            className="min-h-16 px-3 py-3 text-center font-mono"
+                        />
+                        <DiagramBox
+                            label="Auth Middleware"
+                            color="sky"
+                            rounded="md"
+                            bgOpacity="20"
+                            borderOpacity="40"
+                            textSize="xs"
+                            className="min-h-16 px-3 py-3 text-center font-mono"
+                        />
+                        <DiagramBox
+                            label="Rate Limit"
+                            color="amber"
+                            rounded="md"
+                            bgOpacity="20"
+                            borderOpacity="40"
+                            textSize="xs"
+                            className="min-h-16 px-3 py-3 text-center font-mono"
+                        />
+                        <DiagramBox
+                            label="CV + ATS Routes"
+                            color="emerald"
+                            rounded="md"
+                            bgOpacity="20"
+                            borderOpacity="40"
+                            textSize="xs"
+                            className="min-h-16 px-3 py-3 text-center font-mono"
+                        />
+                        <DiagramBox
+                            label="Stripe Webhooks"
+                            color="rose"
+                            rounded="md"
+                            bgOpacity="20"
+                            borderOpacity="40"
+                            textSize="xs"
+                            className="min-h-16 px-3 py-3 text-center font-mono"
+                        />
+                    </div>
+                </DiagramContainer>
+
+                <DiagramContainer
+                    label="Queue + Workers"
+                    labelPosition="top-center"
+                    color="purple"
+                    borderOpacity="50"
+                    rounded="xl"
+                    borderWidth="2"
+                    padding="sm"
+                    className="h-full"
+                >
+                    <div class="flex flex-col gap-3">
+                        <DiagramBox
+                            label="Redis + RQ"
+                            color="purple"
+                            rounded="lg"
+                            textSize="xs"
+                            borderWidth="2"
+                            className="px-4 py-3 font-mono text-center"
+                        />
+                        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                            <DiagramBox
+                                label="Queue ai"
+                                color="emerald"
+                                rounded="md"
+                                textSize="xs"
+                                className="px-3 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="worker-ai"
+                                color="rose"
+                                rounded="md"
+                                textSize="xs"
+                                className="px-3 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="Queue pdf"
+                                color="amber"
+                                rounded="md"
+                                textSize="xs"
+                                className="px-3 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="worker-pdf"
+                                color="slate"
+                                rounded="md"
+                                textSize="xs"
+                                className="px-3 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="Retry + TTL"
+                                color="violet"
+                                rounded="md"
+                                textSize="xs"
+                                className="px-3 py-3 font-mono text-center"
+                            />
+                            <DiagramBox
+                                label="Heartbeat"
+                                color="blue"
+                                rounded="md"
+                                textSize="xs"
+                                className="px-3 py-3 font-mono text-center"
+                            />
+                        </div>
+                    </div>
+                </DiagramContainer>
+            </div>
+
+            <div class="my-6 hidden h-14 w-full md:block">
+                <svg class="h-full w-full overflow-visible" style="pointer-events: none;">
+                    <line x1="16%" y1="0" x2="50%" y2="100%" stroke="rgb(14, 165, 233)" stroke-width="2" opacity="0.55" stroke-linecap="round" />
+                    <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgb(99, 102, 241)" stroke-width="2" opacity="0.7" stroke-linecap="round" />
+                    <line x1="84%" y1="0" x2="50%" y2="100%" stroke="rgb(168, 85, 247)" stroke-width="2" opacity="0.55" stroke-linecap="round" />
+                </svg>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <DiagramBox
+                    label="PostgreSQL"
+                    color="emerald"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="Supabase Auth"
+                    color="sky"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="Supabase Storage"
+                    color="sky"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="OpenAI / Ollama"
+                    color="rose"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="Stripe Billing"
+                    color="amber"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="Playwright PDF"
+                    color="violet"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="RQ Dashboard"
+                    color="slate"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="RedisInsight"
+                    color="blue"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+                <DiagramBox
+                    label="Logs / Config"
+                    color="indigo"
+                    rounded="lg"
+                    textSize="xs"
+                    className="px-4 py-3 font-mono text-center"
+                />
+            </div>
         </div>
     )}
 
