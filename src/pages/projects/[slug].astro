@@ -5,7 +5,7 @@ import Button from "../../components/ui/Button.astro";
 import Badge from "../../components/ui/Badge.astro";
 import SystemArch from "../../components/diagrams/SystemArch.astro";
 import UserFlow from "../../components/diagrams/UserFlow.astro";
-import ArchitecturePipeline from "../../components/diagrams/ArchitecturePipeline.astro";
+import InfrastructureDiagram from "../../components/diagrams/InfrastructureDiagram.astro";
 import Navbar from "../../components/Navbar.astro";
 import { projects, type Project } from "../../data/projects";
 
@@ -212,8 +212,8 @@ const capabilitiesSectionTitle = "What You Can Do";
 
     <!-- System Architecture -->
     <Section title="System Architecture" class="bg-slate-900/30">
-        <div class="grid lg:grid-cols-3 gap-12">
-            <div class="lg:col-span-1 space-y-6">
+        <div class:list={[project.architecture.infrastructure ? "space-y-10" : "grid lg:grid-cols-3 gap-12"]}>
+            <div class:list={[project.architecture.infrastructure ? "grid md:grid-cols-2 gap-8" : "lg:col-span-1 space-y-6"]}>
                 <p class="text-slate-400 leading-relaxed text-lg">
                     {project.architecture.description}
                 </p>
@@ -246,8 +246,8 @@ const capabilitiesSectionTitle = "What You Can Do";
                 </div>
             </div>
             <div class="lg:col-span-2">
-                {project.architecture.layers ? (
-                    <ArchitecturePipeline title={project.title} layers={project.architecture.layers} />
+                {project.architecture.infrastructure ? (
+                    <InfrastructureDiagram id={project.slug} infrastructure={project.architecture.infrastructure} />
                 ) : (
                     <>
                         <SystemArch type={project.architecture.diagramType} />

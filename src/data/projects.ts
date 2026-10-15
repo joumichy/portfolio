@@ -1,8 +1,7 @@
-export interface ArchitectureLayer {
-    title: string;
-    nodes: { title: string; description: string }[];
-    connection?: string;
-}
+import {
+    fleuryInfrastructure, sibylInfrastructure, shortlistableInfrastructure,
+    type ProjectInfrastructure,
+} from "./infrastructure";
 
 export interface Project {
     slug: string;
@@ -26,7 +25,7 @@ export interface Project {
     architecture: {
         description: string;
         diagramType: 'microservices' | 'monolith' | 'serverless' | 'mobile-backend' | 'bloden' | 'robot-racer' | 'shortlistable';
-        layers?: ArchitectureLayer[];
+        infrastructure?: ProjectInfrastructure;
         decisions?: { title: string; description: string }[];
     };
     userFlow: {
@@ -42,7 +41,7 @@ export const projects: Project[] = [
         subtitle: "Software Quality & AI Test Intelligence",
         description: "Explore web, API and mobile behavior, run tests and investigate release risks. Fleury connects execution evidence with an AI assistant, test recommendations and reviewable quality decisions.",
         longDescription: "Fleury helps engineering and QA teams understand what their software does, which behaviors have been tested and what needs attention before release. It brings application exploration, test discovery and execution, behavioral graphs, quality gates and evidence into one workbench. Its AI assistant helps investigate findings, propose links between behavior and tests, recommend and generate tests, and prepare quality briefs for different stakeholders. I conceived the product, its analysis algorithms and distributed architecture, from the interface to enterprise and self-hosted delivery.",
-        tech: ["Next.js", "TypeScript", "Go", "Rust", "PostgreSQL", "Temporal", "Kafka", "gRPC", "OpenAI", "Playwright", "Appium", "Docker"],
+        tech: ["Next.js", "TypeScript", "Go", "Rust", "PostgreSQL", "Temporal", "Kafka", "gRPC", "AI integration", "Playwright", "Appium", "Docker"],
         tags: ["Developer Tools", "Quality", "AI"],
         image: null,
         problem: "Source code, tests and real application behavior often live in separate tools. A passing test suite does not explain which user journeys remain unexplored, and a failed run can leave teams without enough evidence to diagnose the problem or decide whether a release is ready.",
@@ -84,22 +83,16 @@ export const projects: Project[] = [
         ],
         stackGroups: [
             { title: "Frontend", items: ["Next.js App Router", "React", "TypeScript", "Tailwind CSS", "TanStack Query", "next-intl", "Motion", "Shared UI package", "Storybook", "OpenAPI client generation"] },
-            { title: "Backend & Analysis", items: ["Go", "Rust", "REST / OpenAPI", "Protobuf / gRPC", "pgx", "Tree-sitter", "Behavior Core", "Static Discovery"] },
-            { title: "AI & Test Synthesis", items: ["OpenAI Responses API", "Durable AI jobs", "Evidence manifests", "Capability policies", "Provider provenance", "Human review", "Isolated synthesis worker", "Versioned quality briefs"] },
+            { title: "Backend & Analysis", items: ["Go", "Rust", "REST / OpenAPI", "Protobuf / gRPC", "pgx", "Source analysis", "Behavior analysis"] },
+            { title: "AI & Test Synthesis", items: ["LLM gateway", "Durable AI jobs", "Evidence manifests", "Capability policies", "Provider provenance", "Human review", "Isolated synthesis worker", "Versioned quality briefs"] },
             { title: "Execution & Events", items: ["Temporal", "Kafka", "PostgreSQL outbox", "Go runners", "Playwright", "Chrome DevTools Protocol", "Appium", "UiAutomator2", "XCUITest"] },
-            { title: "Data & Identity", items: ["PostgreSQL", "Row-level security", "S3-compatible storage", "MinIO", "OIDC", "Keycloak", "SCIM", "OpenBao"] },
-            { title: "Infrastructure & Delivery", items: ["Docker Compose", "OpenTelemetry", "Prometheus", "Grafana", "Self-hosted CLI", "Air-gap release bundles", "Ed25519 signatures", "SBOM"] }
+            { title: "Data & Identity", items: ["PostgreSQL", "Row-level security", "Object storage", "OIDC", "Identity broker", "SCIM", "Secrets store"] },
+            { title: "Infrastructure & Delivery", items: ["Docker Compose", "OpenTelemetry", "Prometheus", "Grafana", "Self-hosted CLI", "Air-gap release bundles", "Signed releases", "SBOM"] }
         ],
         architecture: {
-            description: "The Next.js workbench and BFF consume the Go control plane through OpenAPI. PostgreSQL owns product state and durable commands; Temporal coordinates execution, recovery and runner activity. Rust modules analyze behavior and source structure, while Kafka transports events to derived views. Governed AI jobs send evidence manifests to OpenAI and persist proposals for review. Test synthesis uses a separate, network-isolated execution worker; the quality engine retains ownership of scores and gates.",
+            description: "Fleury separates product control, durable orchestration, runner execution and the event plane. The Go control plane owns PostgreSQL state and commands; Temporal coordinates long-running work, and separate runner hosts act on web, API and mobile targets. Rust analyzers run across process boundaries. Evidence is stored in object storage, secrets in a secrets store, and reviewed AI jobs use a provider adapter. The views below distinguish this runtime from the Kafka/CDC plane, the self-hosted package and container and Kubernetes deployment variants.",
             diagramType: "microservices",
-            layers: [
-                { title: "Product surface", nodes: [{ title: "Next.js workbench & BFF", description: "Exploration, tests, quality gates and AI assistant" }, { title: "Enterprise identity", description: "OIDC / Keycloak and SCIM integration" }], connection: "REST / JSON with generated OpenAPI contracts" },
-                { title: "Control plane", nodes: [{ title: "Go API & domain services", description: "Projects, source revisions, access and commands" }, { title: "PostgreSQL + outbox", description: "Product authority and durable execution state" }], connection: "Durable commands, workflow dispatch and recovery" },
-                { title: "Orchestration & analysis", nodes: [{ title: "Temporal workflows", description: "Long-running coordination and resumable execution" }, { title: "Rust analysis", description: "Behavior Core and static source discovery" }, { title: "Kafka & projections", description: "Event transport and derived read models" }], connection: "Runner dispatch and internal Protobuf / gRPC" },
-                { title: "Execution & evidence", nodes: [{ title: "Go runner agents", description: "Isolated execution, leases and cleanup" }, { title: "Web / API / Mobile", description: "Playwright + CDP, API adapters and Appium" }, { title: "Evidence storage", description: "S3 / MinIO artifacts with checksums" }] },
-                { title: "AI assistance · alongside the execution flow", nodes: [{ title: "Governed AI jobs / OpenAI", description: "Evidence-grounded correlations, recommendations and briefs" }, { title: "Review & quality engine", description: "Accepted proposals; authoritative scores and gates" }, { title: "Test synthesis worker", description: "Exact revision, reviewed diff and network-isolated validation" }] }
-            ],
+            infrastructure: fleuryInfrastructure,
             decisions: [
                 { title: "Explicit ownership", description: "The control plane and PostgreSQL remain authoritative; event transport and derived projections do not silently replace product state." },
                 { title: "Independent evidence", description: "Tests and exploration can run separately. Correlation requires matching source revisions, so a missing second run does not become fabricated coverage." },
@@ -124,7 +117,7 @@ export const projects: Project[] = [
         subtitle: "Continuous Market Intelligence",
         description: "Track the markets that matter to your business. Sibyl brings search, news and social attention into historical views, signals, opportunity watchlists and AI-assisted briefs for ongoing market decisions.",
         longDescription: "Sibyl helps founders, marketers and analysts follow their markets without rebuilding the same research each week. Teams track a portfolio of topics, compare attention and momentum, investigate signals and related opportunities, and review geographic interest, search results and source evidence. Watchlists, market theses, alerts and briefs turn those observations into a recurring decision workflow; Ask Sibyl answers questions from workspace evidence. I conceived the product, its scoring and signal algorithms, and the asynchronous architecture behind collection, shared computation and historical monitoring.",
-        tech: ["Next.js", "React", "TypeScript", "NestJS", "PostgreSQL", "Drizzle", "Redis", "BullMQ", "OpenAI", "Docker", "Stripe"],
+        tech: ["Next.js", "React", "TypeScript", "NestJS", "PostgreSQL", "Drizzle", "Redis", "BullMQ", "AI integration", "Docker", "Payment integration"],
         tags: ["Market Intelligence", "AI"],
         image: null,
         homepageImage: "/projects/sibyl-home.png",
@@ -144,7 +137,7 @@ export const projects: Project[] = [
             "Conceived the analytical model, scoring and signal-detection logic for market comparisons and ongoing monitoring.",
             "Designed asynchronous collection, historical snapshots, shared computation and persisted dashboard read models.",
             "Built topic exploration, signals, opportunity watchlists, market theses, cited AI answers and briefs, alongside collaboration and commercial access.",
-            "Developed source-context qualification and recovery mechanisms to handle fragmented, delayed or incomplete provider observations."
+            "Developed contextual data processing and recovery mechanisms to handle fragmented, delayed or incomplete provider observations."
         ],
         features: [
             "Portfolio monitoring, market scores and historical timelines",
@@ -162,24 +155,19 @@ export const projects: Project[] = [
             "Sharing collection and computation across users to control processing costs without mixing topic context or workspace access.",
             "Recovering delayed postbacks and partial collection cycles while keeping published analytical views consistent.",
             "Giving AI answers useful source citations while keeping scores, signals and market decisions tied to the deterministic analytical model.",
-            "Grounding semantic interpretation in source evidence; source-relevance qualification remains an active development area."
+            "Keeping contextual analysis relevant and traceable as the available evidence changes."
         ],
         stackGroups: [
-            { title: "Frontend", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Radix UI", "TanStack Query", "Recharts", "React Simple Maps", "Zod", "Vercel"] },
-            { title: "Backend & Data", items: ["NestJS", "Node.js / Bun", "TypeScript", "Drizzle ORM", "PostgreSQL", "Supabase Auth", "REST APIs"] },
+            { title: "Frontend", items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Radix UI", "TanStack Query", "Recharts", "React Simple Maps", "Zod", "Managed hosting"] },
+            { title: "Backend & Data", items: ["NestJS", "Node.js / Bun", "TypeScript", "Drizzle ORM", "PostgreSQL", "Managed authentication", "REST APIs"] },
             { title: "Workers & Reliability", items: ["BullMQ", "Redis / ioredis", "Provider I/O worker", "Materialization worker", "Reliability worker", "Database outbox", "Read-model invalidation"] },
-            { title: "AI & Sources", items: ["OpenAI", "DataForSEO", "Bright Data", "YouTube data", "Jina reranking (development)", "ONNX / Transformers (evaluation)", "Cheerio"] },
-            { title: "Infrastructure & Integrations", items: ["Docker Compose", "Nginx", "Certbot", "Stripe Billing", "Resend", "HubSpot", "Vercel Analytics", "PostHog"] }
+            { title: "AI & Data Integration", items: ["LLM gateway", "External data sources", "Content ingestion", "Contextual analysis", "Source provenance"] },
+            { title: "Infrastructure & Integrations", items: ["Docker Compose", "Nginx", "TLS certificate management", "Subscription billing", "Email delivery", "CRM integration", "Usage analytics", "Product analytics"] }
         ],
         architecture: {
-            description: "A Next.js frontend on Vercel reads persisted market projections through a NestJS API behind Nginx. Redis/BullMQ separates provider collection, materialization and reliability. PostgreSQL/Drizzle retain observations, historical snapshots, signals, opportunities, theses and workspace data. Deterministic scoring runs during materialization; the LLM gateway uses bounded workspace evidence for Ask Sibyl and briefs. Shared caches and update events refresh the dashboard without provider calls on its read path.",
+            description: "Sibyl deploys Next.js on managed hosting and the NestJS backend on a separate Docker Compose host behind an edge gateway and Nginx. Redis/BullMQ transports work between dedicated provider I/O, materialization and reliability processes. Managed services supply identity and PostgreSQL; Drizzle persists observations, historical snapshots and read models. Provider postbacks return through the API origin. Redis update events and an SSE proxy refresh the UI without triggering provider collection on dashboard reads.",
             diagramType: "microservices",
-            layers: [
-                { title: "Product & access", nodes: [{ title: "Next.js / Vercel", description: "Markets, signals, opportunities, theses and Ask Sibyl" }, { title: "Supabase Auth", description: "Authenticated workspace access" }], connection: "HTTPS requests and dashboard reads" },
-                { title: "Application & scheduling", nodes: [{ title: "Nginx + NestJS API", description: "Workspace, billing, jobs and read-model endpoints" }, { title: "Redis / BullMQ", description: "Queue transport, throttling and shared cache" }], connection: "Queued jobs, provider postbacks and recovery commands" },
-                { title: "Dedicated worker roles", nodes: [{ title: "Provider I/O", description: "Collection, external calls and durable delivery" }, { title: "Materialization", description: "Postbacks, aggregation and read-model recovery" }, { title: "Reliability", description: "Scheduling, watchdogs and maintenance" }], connection: "Persist observations, publish projections and invalidate caches" },
-                { title: "Persistence & integrations", nodes: [{ title: "PostgreSQL / Drizzle", description: "Evidence, history, signals, opportunities and theses" }, { title: "Market data providers", description: "Search, news, social and video observations" }, { title: "LLM gateway / OpenAI", description: "Cited answers and briefs from workspace evidence" }, { title: "Commercial delivery", description: "Stripe, email and CRM integrations" }] }
-            ],
+            infrastructure: sibylInfrastructure,
             decisions: [
                 { title: "Keep reads responsive", description: "Dashboard requests consume persisted projections; provider work and expensive recomputation run outside the HTTP request." },
                 { title: "Preserve evidence", description: "Observations retain their source, context and timestamp. Algorithms compute scores from that evidence; AI explains it. Missing history remains unknown rather than becoming an invented growth value." },
@@ -203,7 +191,7 @@ export const projects: Project[] = [
         subtitle: "AI Resume Studio & Job Matching",
         description: "Turn an existing CV into an editable application tailored to a role. Shortlistable combines layout reconstruction, evidence-based job matching, reviewable AI rewrites and a visual editor with PDF export.",
         longDescription: "Shortlistable helps candidates show how their actual experience fits a specific role. They can create a CV from a template or import an existing document, reconstruct its layout, edit content and presentation, and compare it with a job description. The analysis connects role requirements to evidence in the CV and proposes changes candidates can review before applying. I conceived the matching logic and document-reconstruction architecture, and built the resume studio, export pipeline and commercial access with dedicated background processing.",
-        tech: ["Next.js", "React", "TypeScript", "FastAPI", "Python", "PostgreSQL", "Supabase", "Redis", "RQ", "Docker", "Nginx", "Stripe", "OpenAI", "Playwright"],
+        tech: ["Next.js", "React", "TypeScript", "FastAPI", "Python", "PostgreSQL", "Managed data services", "Redis", "RQ", "Docker", "Nginx", "Payment integration", "AI integration", "Playwright"],
         tags: ["SaaS", "AI"],
         image: null,
         homepageImage: "/projects/shortlistable-home.png",
@@ -240,14 +228,14 @@ export const projects: Project[] = [
             "Reconstructing typography, columns, geometry and visual assets while binding extracted content to editable CV sections.",
             "Keeping AI suggestions truthful: the system must improve wording and evidence without inventing skills or experience.",
             "Balancing ATS optimization with human readability so the final CV does not become keyword-stuffed.",
-            "Isolating document import, OpenAI analysis, section enrichment and Chromium rendering in separate queues to prevent one slow workload from delaying all users.",
+            "Isolating document import, AI analysis, section enrichment and Chromium rendering in separate queues to prevent one slow workload from delaying all users.",
             "Designing retries, TTLs, worker heartbeats, SSE job streams, and failure states for background work that depends on external AI and document services.",
             "Designing a workflow that feels fast for repeated applications while still giving users control over every generated change."
         ],
         stackGroups: [
             {
                 title: "Frontend & Product",
-                items: ["Next.js 16 App Router", "React 19", "TypeScript", "Tailwind CSS 4", "next-intl", "next-themes", "Radix UI", "Lucide React", "Framer Motion", "Tiptap editor", "React Hook Form", "Zod", "Sonner", "Vercel Analytics", "Responsive marketing pages", "SEO sitemap"]
+                items: ["Next.js 16 App Router", "React 19", "TypeScript", "Tailwind CSS 4", "next-intl", "next-themes", "Radix UI", "Lucide React", "Framer Motion", "Tiptap editor", "React Hook Form", "Zod", "Sonner", "Usage analytics", "Responsive marketing pages", "SEO sitemap"]
             },
             {
                 title: "Backend & API",
@@ -255,7 +243,7 @@ export const projects: Project[] = [
             },
             {
                 title: "AI & Documents",
-                items: ["OpenAI SDK", "CV parser", "Job-fit matching", "ATS scoring", "Section enrichment", "Layout reconstruction", "Semantic bindings", "OpenCV", "NumPy", "Pillow", "Tesseract OCR", "pdfminer.six", "python-docx", "PyMuPDF", "ODF parsing", "Pandas", "OpenPyXL", "Playwright / Chromium"]
+                items: ["LLM API integration", "Document parsing", "Role matching", "CV quality analysis", "Section editing", "Layout reconstruction", "Image processing", "OCR", "PDF/DOCX processing", "Browser-based PDF rendering"]
             },
             {
                 title: "Workers & Queue",
@@ -263,26 +251,21 @@ export const projects: Project[] = [
             },
             {
                 title: "Data & Storage",
-                items: ["PostgreSQL", "Supabase Auth", "Supabase client", "Supabase service role", "Supabase Storage", "CV_FILES bucket", "CV_PHOTOS bucket", "CV_PREVIEWS bucket", "CV_TEMPLATES bucket", "User profiles", "CV versions", "Job analyses", "Billing catalog", "Subscription state"]
+                items: ["PostgreSQL", "Managed authentication", "Managed data access", "Profile access", "Object storage", "Document storage", "Image storage", "Preview storage", "Template storage", "User profiles", "CV versions", "Job analyses", "Billing catalog", "Subscription state"]
             },
             {
                 title: "Infrastructure & Ops",
-                items: ["Vercel web hosting", "Docker", "Docker Compose", "Production Compose stack", "Nginx reverse proxy", "Basic auth for admin tools", "uv lockfile", "python:3.12-slim", "Playwright Chromium install", "Redis appendonly persistence", "Environment-based config", "Shell/PowerShell launchers", "Structured logging", "Rotating log files"]
+                items: ["Managed web hosting", "Docker", "Docker Compose", "Nginx reverse proxy", "Basic auth for admin tools", "uv lockfile", "Playwright Chromium install", "Redis appendonly persistence", "Environment-based config", "Shell/PowerShell launchers", "Application operations"]
             },
             {
                 title: "Integrations",
-                items: ["Stripe subscriptions", "Stripe checkout", "Usage credits", "Stripe webhooks", "OpenAI API", "Supabase authentication", "Next.js API proxy", "PostHog", "Remotion marketing videos"]
+                items: ["Subscription management", "Hosted checkout", "Usage credits", "Billing webhooks", "AI inference API", "Managed authentication", "Next.js API proxy", "Product analytics", "Remotion marketing videos"]
             }
         ],
         architecture: {
-            description: "A Next.js editor on Vercel consumes the FastAPI backend through API proxy routes and SSE job streams. Python services coordinate CV data, document reconstruction, matching and billing. Redis/RQ isolates AI, CV import, job-fit and PDF workloads in four dedicated queues and worker processes. PostgreSQL/SQLAlchemy persist application data, Supabase handles authentication and file storage, and Playwright/Chromium produces PDF exports.",
+            description: "Shortlistable deploys the Next.js studio on managed hosting and a separate FastAPI backend behind Nginx on a Docker Compose host. A private bridge network connects the API, Redis and four Python RQ consumers: cv_import, ai, job_fit and pdf. Managed identity, PostgreSQL and object storage sit outside that network. Workers call an inference service or render with Playwright/Chromium, then persist results and documents. The Next.js proxy relays API requests and SSE job status; a payment service delivers billing webhooks to the public API origin.",
             diagramType: "shortlistable",
-            layers: [
-                { title: "Editor & session", nodes: [{ title: "Next.js / Vercel", description: "CV studio, preview, job fit and billing" }, { title: "API proxy + SSE", description: "Authenticated requests and live job status" }], connection: "HTTPS requests and job-status streams" },
-                { title: "Application backend", nodes: [{ title: "Nginx + FastAPI", description: "CV, template, matching and billing services" }, { title: "Redis / RQ", description: "Job admission, retries, timeouts and results" }], connection: "Route each workload to its dedicated queue" },
-                { title: "Background workers", nodes: [{ title: "cv_import", description: "Document extraction and CV import" }, { title: "job_fit", description: "Role matching and recommendations" }, { title: "ai", description: "AI enrichment and reconstruction tasks" }, { title: "pdf", description: "Playwright / Chromium rendering" }], connection: "Read and persist data, call providers, return results" },
-                { title: "Data & providers", nodes: [{ title: "PostgreSQL / SQLAlchemy", description: "CVs, templates, subscriptions and credits" }, { title: "Supabase", description: "Authentication and document storage" }, { title: "OpenAI + Stripe", description: "Semantic analysis and commercial access" }] }
-            ],
+            infrastructure: shortlistableInfrastructure,
             decisions: [
                 { title: "Separate workloads", description: "Import, role matching, enrichment and rendering use dedicated queues so they can be processed independently." },
                 { title: "Preserve document fidelity", description: "Document extraction and layout reconstruction are separate concerns, joined by semantic bindings and a reviewable preview." },

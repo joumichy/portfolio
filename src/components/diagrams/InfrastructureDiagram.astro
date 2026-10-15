@@ -1,0 +1,271 @@
+---
+import {
+    CONNECTION_KIND, INFRASTRUCTURE_NODE_SIZE, NODE_KIND, PORT,
+    type InfrastructureConnection, type ProjectInfrastructure, type Point, type Port,
+} from "../../data/infrastructure";
+
+interface Props { id: string; infrastructure: ProjectInfrastructure }
+const { id, infrastructure } = Astro.props;
+const nodeSize = INFRASTRUCTURE_NODE_SIZE;
+const connectionLabels = {
+    [CONNECTION_KIND.request]: "Request / response",
+    [CONNECTION_KIND.async]: "Queued work",
+    [CONNECTION_KIND.data]: "Persistent data",
+    [CONNECTION_KIND.event]: "Events / callbacks",
+    [CONNECTION_KIND.control]: "Control / operations",
+};
+const nodeLabels = {
+    [NODE_KIND.client]: "CLIENT", [NODE_KIND.service]: "SERVICE", [NODE_KIND.worker]: "WORKER",
+    [NODE_KIND.store]: "DATA STORE", [NODE_KIND.external]: "EXTERNAL",
+};
+const graphText = {
+    views: "Architecture views", zoom: "Diagram zoom", out: "Zoom out", in: "Zoom in",
+    fit: "Fit diagram", reset: "Actual size", connections: "Read all connections",
+    from: "From", to: "To", protocol: "Protocol / responsibility", kind: "Flow",
+    instructions: "Scroll inside the canvas to explore. Zoom for detail, or fit the whole diagram.",
+};
+const pathCommand = { move: "M", line: "L", separator: " " };
+const edgeLabelSizing = { characterWidth: 6.4, padding: 14, lineHeight: 14, maximumCharacters: 14, baselineOffset: 16 };
+function labelLines(label: string) {
+    const lines: string[] = [];
+    for (const word of label.split(pathCommand.separator)) {
+        const lastLine = lines.at(-1);
+        if (lastLine && lastLine.length + word.length < edgeLabelSizing.maximumCharacters) {
+            lines[lines.length - 1] = `${lastLine} ${word}`;
+        } else lines.push(word);
+    }
+    return lines;
+}
+const drawings = infrastructure.views.map((view, index) => {
+    const prefix = `${id}-${view.id}`;
+    const boxes = new Map<string, { x: number; y: number; width: number; height: number; title: string }>([
+        ...view.nodes.map((node) => [node.id, { ...node, ...nodeSize }] as const),
+        ...view.zones.map((zone) => [zone.id, zone] as const),
+    ]);
+    function port(boxId: string, side: Port): Point {
+        const box = boxes.get(boxId);
+        if (!box) throw new Error(`Unknown infrastructure endpoint: ${boxId}`);
+        switch (side) {
+            case PORT.top: return [box.x + box.width / 2, box.y];
+            case PORT.right: return [box.x + box.width, box.y + box.height / 2];
+            case PORT.bottom: return [box.x + box.width / 2, box.y + box.height];
+            case PORT.left: return [box.x, box.y + box.height / 2];
+        }
+    }
+    function connectionPath(edge: InfrastructureConnection) {
+        const points = [port(edge.from, edge.sourcePort), ...(edge.via ?? []), port(edge.to, edge.targetPort)];
+        return points.map(([x, y], pointIndex) =>
+            `${pointIndex ? pathCommand.line : pathCommand.move}${x},${y}`
+        ).join(pathCommand.separator);
+    }
+    return { ...view, prefix, initial: index === 0, boxes, connectionPath };
+});
+---
+
+<infrastructure-diagram>
+    <div class="diagram-toolbar">
+        <div class="view-switch" role="group" aria-label={graphText.views}>
+            {drawings.map((view) => (
+                <button type="button" data-select-view={view.id} aria-pressed={view.initial} aria-controls={`${view.prefix}-panel`}>
+                    {view.title}
+                </button>
+            ))}
+        </div>
+        <div class="zoom-controls" role="group" aria-label={graphText.zoom}>
+            <button type="button" data-zoom-out aria-label={graphText.out}>−</button>
+            <output data-zoom-output aria-live="polite">100%</output>
+            <button type="button" data-zoom-in aria-label={graphText.in}>+</button>
+            <button type="button" data-zoom-fit>{graphText.fit}</button>
+            <button type="button" data-zoom-reset>{graphText.reset}</button>
+        </div>
+    </div>
+    {drawings.map((view) => (
+        <div id={`${view.prefix}-panel`} data-diagram-view={view.id} hidden={!view.initial}>
+            <p class="view-description">{view.description}</p>
+            <div class="legend" aria-label="Connection legend">
+                {Object.entries(connectionLabels).map(([kind, label]) => (
+                    <span><i class={`connection-${kind}`} aria-hidden="true" />{label}</span>
+                ))}
+            </div>
+            <figure>
+                <div class="canvas" data-diagram-canvas tabindex="0" role="region" aria-label={`${infrastructure.title}: ${view.title}`}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox={`0 0 ${view.width} ${view.height}`}
+                        width={view.width} height={view.height}
+                        data-graph-width={view.width} data-graph-height={view.height}
+                        role="img" aria-labelledby={`${view.prefix}-title ${view.prefix}-description`}
+                    >
+                        <title id={`${view.prefix}-title`}>{infrastructure.title} · {view.title}</title>
+                        <desc id={`${view.prefix}-description`}>{view.description} The connection table below provides a text equivalent of every arrow.</desc>
+                        <defs>
+                            {Object.keys(connectionLabels).map((kind) => (
+                                <marker id={`${view.prefix}-arrow-${kind}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                                    <path class={`arrowhead connection-${kind}`} d="M 1 1 L 9 5 L 1 9 z" />
+                                </marker>
+                            ))}
+                        </defs>
+                        {view.zones.map((zone) => (
+                            <g class="zone">
+                                <rect x={zone.x} y={zone.y} width={zone.width} height={zone.height} rx="14" />
+                                <text x={zone.x + 20} y={zone.y + 27} class="zone-title">{zone.title}</text>
+                                <text x={zone.x + 20} y={zone.y + 47} class="zone-description">{zone.detail}</text>
+                            </g>
+                        ))}
+                        <g class="edges">
+                            {view.connections.map((edge) => (
+                                <path class={`edge connection-${edge.kind}`} d={view.connectionPath(edge)} marker-end={`url(#${view.prefix}-arrow-${edge.kind})`}>
+                                    <title>{view.boxes.get(edge.from)?.title} → {view.boxes.get(edge.to)?.title}: {edge.label}</title>
+                                </path>
+                            ))}
+                        </g>
+                        {view.nodes.map((node) => (
+                            <g class={`node node-${node.kind}`} transform={`translate(${node.x}, ${node.y})`}>
+                                <rect class="node-body" width={nodeSize.width} height={nodeSize.height} rx="9" />
+                                <path class="node-accent" d={`M 1 19 L 1 ${nodeSize.height - 19}`} />
+                                <text x="16" y="19" class="node-kind">{nodeLabels[node.kind]}</text>
+                                <text x="16" y="41" class="node-title">{node.title}</text>
+                                <text x="16" y="63" class="node-technology">{node.technology}</text>
+                                <text x="16" y="82" class="node-detail">{node.detail}</text>
+                            </g>
+                        ))}
+                        {view.connections.map((edge) => {
+                            const lines = labelLines(edge.label);
+                            const labelWidth = Math.max(...lines.map((line) => line.length)) * edgeLabelSizing.characterWidth + edgeLabelSizing.padding;
+                            const labelHeight = lines.length * edgeLabelSizing.lineHeight + edgeLabelSizing.padding;
+                            return (
+                                <g class={`edge-label connection-${edge.kind}`} transform={`translate(${edge.labelAt[0]}, ${edge.labelAt[1]})`}>
+                                    <rect x={-labelWidth / 2} y={-edgeLabelSizing.baselineOffset} width={labelWidth} height={labelHeight} rx="4" />
+                                    <text text-anchor="middle">{lines.map((line, lineIndex) => <tspan x="0" dy={lineIndex ? edgeLabelSizing.lineHeight : 0}>{line}</tspan>)}</text>
+                                </g>
+                            );
+                        })}
+                    </svg>
+                </div>
+                <figcaption>{graphText.instructions}</figcaption>
+            </figure>
+            <div class="architecture-notes">
+                {view.notes.map((note) => (
+                    <div><h3>{note.title}</h3><p>{note.text}</p></div>
+                ))}
+            </div>
+            <details class="connection-table">
+                <summary>{graphText.connections} <span>({view.connections.length})</span></summary>
+                <div class="table-scroll">
+                    <table>
+                        <thead><tr><th>{graphText.from}</th><th>{graphText.to}</th><th>{graphText.protocol}</th><th>{graphText.kind}</th></tr></thead>
+                        <tbody>{view.connections.map((edge) => (
+                            <tr><td>{view.boxes.get(edge.from)?.title}</td><td>{view.boxes.get(edge.to)?.title}</td><td>{edge.label}</td><td>{connectionLabels[edge.kind]}</td></tr>
+                        ))}</tbody>
+                    </table>
+                </div>
+            </details>
+        </div>
+    ))}
+</infrastructure-diagram>
+
+<script>
+    import { DIAGRAM_CONTROLS } from "../../data/infrastructure";
+
+    class InfrastructureDiagram extends HTMLElement {
+        connectedCallback() {
+            const views = [...this.querySelectorAll<HTMLElement>("[data-diagram-view]")];
+            const buttons = [...this.querySelectorAll<HTMLButtonElement>("[data-select-view]")];
+            const output = this.querySelector<HTMLOutputElement>("[data-zoom-output]")!;
+            const zoomOut = this.querySelector<HTMLButtonElement>("[data-zoom-out]")!;
+            const zoomIn = this.querySelector<HTMLButtonElement>("[data-zoom-in]")!;
+            const percent = new Intl.NumberFormat(undefined, { style: "percent", maximumFractionDigits: 0 });
+            let activeView = views.find((view) => !view.hidden)!;
+            let zoom = DIAGRAM_CONTROLS.initialZoom;
+
+            const resize = (nextZoom: number) => {
+                zoom = Math.max(DIAGRAM_CONTROLS.minimumZoom, Math.min(DIAGRAM_CONTROLS.maximumZoom, nextZoom));
+                const svg = activeView.querySelector<SVGSVGElement>("svg")!;
+                svg.style.width = `${Number(svg.dataset.graphWidth) * zoom}px`;
+                svg.style.height = `${Number(svg.dataset.graphHeight) * zoom}px`;
+                output.value = percent.format(zoom);
+                zoomOut.disabled = zoom <= DIAGRAM_CONTROLS.minimumZoom;
+                zoomIn.disabled = zoom >= DIAGRAM_CONTROLS.maximumZoom;
+            };
+            buttons.forEach((button) => button.addEventListener("click", () => {
+                views.forEach((view) => { view.hidden = view.dataset.diagramView !== button.dataset.selectView; });
+                buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+                activeView = views.find((view) => !view.hidden)!;
+                const canvas = activeView.querySelector<HTMLElement>("[data-diagram-canvas]")!;
+                canvas.scrollTo({ top: 0, left: 0 });
+                resize(DIAGRAM_CONTROLS.initialZoom);
+            }));
+            zoomOut.addEventListener("click", () => resize(zoom - DIAGRAM_CONTROLS.zoomStep));
+            zoomIn.addEventListener("click", () => resize(zoom + DIAGRAM_CONTROLS.zoomStep));
+            this.querySelector("[data-zoom-reset]")!.addEventListener("click", () => resize(DIAGRAM_CONTROLS.initialZoom));
+            this.querySelector("[data-zoom-fit]")!.addEventListener("click", () => {
+                const canvas = activeView.querySelector<HTMLElement>("[data-diagram-canvas]")!;
+                const svg = activeView.querySelector<SVGSVGElement>("svg")!;
+                resize(Math.min(canvas.clientWidth / Number(svg.dataset.graphWidth), canvas.clientHeight / Number(svg.dataset.graphHeight)));
+                canvas.scrollTo({ top: 0, left: 0 });
+            });
+            resize(zoom);
+        }
+    }
+    const infrastructureTagName = "infrastructure-diagram";
+    if (!customElements.get(infrastructureTagName)) customElements.define(infrastructureTagName, InfrastructureDiagram);
+</script>
+
+<style>
+    infrastructure-diagram { display: block; min-width: 0; }
+    [hidden] { display: none !important; }
+    .diagram-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 1px solid #334155; }
+    .view-switch, .zoom-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+    button { cursor: pointer; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #cbd5e1; padding: 0.65rem 0.85rem; font-size: 0.8rem; line-height: 1.3; }
+    button:hover { background: #1e293b; color: white; }
+    button[aria-pressed="true"] { border-color: #818cf8; color: #e0e7ff; background: #312e8140; }
+    button:focus-visible, .canvas:focus-visible, summary:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }
+    button:disabled { opacity: 0.35; cursor: default; }
+    output { min-width: 3rem; text-align: center; font: 0.75rem "JetBrains Mono", monospace; color: #94a3b8; }
+    .view-description { max-width: 76ch; margin: 1.5rem 0 1.25rem; color: #94a3b8; line-height: 1.7; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.7rem 1.4rem; margin-bottom: 1rem; font-size: 0.75rem; color: #cbd5e1; }
+    .legend span { display: flex; align-items: center; gap: 0.5rem; }
+    .legend i { display: inline-block; width: 1.5rem; border-top: 2px solid var(--connection-color); }
+    .legend i.connection-async, .legend i.connection-event { border-top-style: dashed; }
+    figure { margin: 0; min-width: 0; }
+    .canvas { width: 100%; height: min(75vh, 760px); min-height: 340px; overflow: auto; overscroll-behavior: contain; border: 1px solid #334155; border-radius: 12px; background-color: #080f20; background-image: radial-gradient(#33415560 1px, transparent 1px); background-size: 20px 20px; }
+    svg { display: block; max-width: none; flex-shrink: 0; font-family: "Inter", sans-serif; }
+    .zone rect { fill: #101a2d; fill-opacity: 0.72; stroke: #475569; stroke-width: 1; stroke-dasharray: 6 5; }
+    .zone-title { font: 600 12px "JetBrains Mono", monospace; fill: #a5b4fc; }
+    .zone-description { font-size: 12px; fill: #94a3b8; }
+    .node-body { fill: #111c31; stroke: #475569; stroke-width: 1; }
+    .node-accent { stroke: var(--node-color); stroke-width: 3; }
+    .node-kind { font: 600 9px "JetBrains Mono", monospace; fill: var(--node-color); letter-spacing: 1px; }
+    .node-title { font-size: 15px; font-weight: 600; fill: #f1f5f9; }
+    .node-technology { font-size: 12px; fill: #cbd5e1; }
+    .node-detail { font-size: 11.5px; fill: #94a3b8; }
+    .node-client { --node-color: #cbd5e1; }
+    .node-service { --node-color: #7dd3fc; }
+    .node-worker { --node-color: #c4b5fd; }
+    .node-store { --node-color: #6ee7b7; }
+    .node-external { --node-color: #fcd34d; }
+    .connection-request { --connection-color: #7dd3fc; }
+    .connection-async { --connection-color: #c4b5fd; }
+    .connection-data { --connection-color: #6ee7b7; }
+    .connection-event { --connection-color: #fcd34d; }
+    .connection-control { --connection-color: #94a3b8; }
+    .edge { fill: none; stroke: var(--connection-color); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8; }
+    .edge.connection-async, .edge.connection-event { stroke-dasharray: 6 5; }
+    .arrowhead { fill: var(--connection-color); }
+    .edge-label rect { fill: #080f20; stroke: #1e293b; stroke-width: 0.5; }
+    .edge-label text { font: 11px "JetBrains Mono", monospace; fill: var(--connection-color); }
+    figcaption { margin-top: 0.75rem; color: #64748b; font-size: 0.75rem; line-height: 1.6; }
+    .architecture-notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    h3 { color: #e2e8f0; font-size: 1rem; font-weight: 600; margin: 0 0 0.6rem; }
+    .architecture-notes p { color: #94a3b8; font-size: 0.85rem; line-height: 1.75; margin: 0; }
+    .connection-table { border: 1px solid #334155; border-radius: 8px; padding: 1rem 1.25rem; }
+    summary { cursor: pointer; color: #cbd5e1; font-size: 0.9rem; }
+    summary span { color: #64748b; margin-left: 0.4rem; }
+    .table-scroll { overflow-x: auto; margin-top: 1rem; }
+    table { border-collapse: collapse; width: 100%; text-align: left; font-size: 0.8rem; }
+    th, td { padding: 0.75rem; border-bottom: 1px solid #1e293b; vertical-align: top; }
+    th { color: #e2e8f0; font-weight: 500; }
+    td { color: #94a3b8; }
+    @media (max-width: 767px) { .architecture-notes { grid-template-columns: 1fr; } .diagram-toolbar { align-items: flex-start; } .canvas { height: 65vh; } }
+    @media (prefers-reduced-motion: reduce) { .canvas { scroll-behavior: auto; } }
+</style>

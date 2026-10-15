@@ -27,7 +27,7 @@ sur leur code et documentation.
 
 - Fleury: documentation index, `CURRENT_STATE.md` family and AI sections;
   `internal/ai/governance.go`, `correlation_proposal.go`, `quality_brief.go`,
-  `aiprovider/openai.go`, `synthesisrunner/runner.go`.
+  the AI provider adapter, `synthesisrunner/runner.go`.
 - Sibyl: documentation index, active plan, product/design reference, market
   intelligence module and runtime README; score computation, market brief types,
   Ask Sibyl generation and frontend thesis/opportunity/assistant owners.
