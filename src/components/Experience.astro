@@ -4,6 +4,20 @@ import Card from './ui/Card.astro';
 
 const experiences = [
   {
+    company: "Doxomed",
+    role: "Senior Product Engineer",
+    period: "06/2026 - Present",
+    location: "Switzerland",
+    description: "Product conception, full-stack engineering and technical architecture for a Swiss digital health platform used in more than 40 medical institutions.",
+    tech: ["Next.js", "React", "TypeScript", "NestJS", "PostgreSQL", "Redis", "BullMQ", "FHIR / Medplum", "Docker", "Kubernetes"],
+    achievements: [
+      "Designed and developed patient and professional workflows, medical records and clinical documentation",
+      "Translated healthcare requirements into coherent product capabilities and modular services",
+      "Integrated medical interoperability standards and secure communication workflows",
+      "Contributed to cryptographic document signing and the reliability of sensitive clinical operations"
+    ]
+  },
+  {
     company: "United Nations - WIPO",
     role: "Senior Software Engineer",
     period: "06/2025 - 12/2025",
@@ -59,6 +73,25 @@ const experiences = [
       "FILA-e Project Manager: Fraud monitoring & statistical analysis",
       "Managed infrastructure of deployed server environments"
     ]
+  },
+  {
+    company: "Freelance",
+    role: "Full Stack Developer",
+    period: "10/2019 - 12/2022",
+    location: "Paris",
+    description: "Designed and delivered web and mobile applications tailored to clients' needs, from requirements and architecture to implementation, maintenance and support.",
+    tech: ["Web", "Mobile", "Full Stack", "Architecture"],
+    achievements: [
+      "Managed project delivery with clients, including specifications, technical documentation and ongoing product improvements"
+    ]
+  },
+  {
+    company: "Caisse d'Allocations Familiales",
+    role: "Developer & Digital Assistant Intern",
+    period: "05/2019 - 08/2019",
+    location: "Paris",
+    description: "Developed tools for holiday registration, fraud monitoring reports and payment-order workflows for a French public social-benefits organization.",
+    tech: ["Application Development", "Workflow Automation", "Data Management"]
   }
 ];
 ---
@@ -76,7 +109,7 @@ const experiences = [
                     <h3 class="text-xl font-bold text-white">{exp.role}</h3>
                     <div class="text-indigo-400 font-medium">{exp.company}</div>
                 </div>
-                <div class="text-slate-500 text-sm font-mono whitespace-nowrap bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800 w-fit">
+                <div class="text-slate-500 text-sm font-mono bg-slate-900/50 px-3 py-1 rounded-lg border border-slate-800 w-fit max-w-full">
                     {exp.period} | {exp.location}
                 </div>
             </div>

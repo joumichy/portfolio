@@ -5,7 +5,13 @@ import Button from "../../components/ui/Button.astro";
 import Badge from "../../components/ui/Badge.astro";
 import SystemArch from "../../components/diagrams/SystemArch.astro";
 import UserFlow from "../../components/diagrams/UserFlow.astro";
-import { projects } from "../../data/projects";
+import ArchitecturePipeline from "../../components/diagrams/ArchitecturePipeline.astro";
+import Navbar from "../../components/Navbar.astro";
+import { projects, type Project } from "../../data/projects";
+
+interface Props {
+    project: Project;
+}
 
 // Generate static paths for all projects
 export async function getStaticPaths() {
@@ -16,10 +22,11 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+const capabilitiesSectionTitle = "What You Can Do";
 ---
 
-<Layout title={`${project.title} | John Allou Portfolio`}>
-    <!-- Navbar Placeholder (Fixed navbar from Layout is visible) -->
+<Layout title={`${project.title} | John Allou Portfolio`} description={project.description}>
+    <Navbar />
     <div class="h-20"></div>
 
     <!-- Hero / Header -->
@@ -53,6 +60,10 @@ const { project } = Astro.props;
             >
                 {project.title}
             </h1>
+
+            {project.subtitle && (
+                <p class="text-xl md:text-2xl text-indigo-300 mb-6">{project.subtitle}</p>
+            )}
 
             <p class="text-xl text-slate-300 max-w-3xl leading-relaxed mb-8">
                 {project.longDescription}
@@ -96,11 +107,13 @@ const { project } = Astro.props;
     {
         project.homepageImage && (
             <Section title="Homepage Preview" class="py-16">
-                <div class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/30 shadow-2xl shadow-indigo-950/20">
+                <div class="overflow-hidden rounded-lg border border-slate-800 bg-slate-900/30">
                     <img
                         src={project.homepageImage}
                         alt={project.homepageImageAlt ?? `${project.title} homepage preview`}
-                        class="block w-full"
+                        class="block w-full h-auto"
+                        width="1440"
+                        height="1000"
                         loading="lazy"
                     />
                 </div>
@@ -134,12 +147,37 @@ const { project } = Astro.props;
         </div>
     </Section>
 
+    {project.capabilities && (
+        <Section title={capabilitiesSectionTitle}>
+            <div class="grid md:grid-cols-2 gap-6">
+                {project.capabilities.map((capability) => (
+                    <div class="rounded-lg border border-slate-800 bg-slate-900/40 p-6">
+                        <h3 class="text-lg font-semibold text-white mb-3">{capability.title}</h3>
+                        <p class="text-slate-400 leading-relaxed">{capability.description}</p>
+                    </div>
+                ))}
+            </div>
+        </Section>
+    )}
+
+    {project.contributions && (
+        <Section title="My Contribution">
+            <ul class="grid md:grid-cols-2 gap-x-12 gap-y-6">
+                {project.contributions.map((contribution) => (
+                    <li class="border-l-2 border-indigo-500 pl-5 text-slate-300 leading-relaxed">
+                        {contribution}
+                    </li>
+                ))}
+            </ul>
+        </Section>
+    )}
+
     {
         project.stackGroups && project.stackGroups.length > 0 && (
             <Section title="Full Stack & Infrastructure">
                 <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {project.stackGroups.map((group) => (
-                        <div class="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+                        <div class="rounded-lg border border-slate-800 bg-slate-900/40 p-6">
                             <h3 class="text-lg font-bold text-white mb-4">
                                 {group.title}
                             </h3>
@@ -160,7 +198,7 @@ const { project } = Astro.props;
             <Section title="Technical Challenges" class="bg-slate-900/30">
                 <div class="grid md:grid-cols-2 gap-6">
                     {project.challenges.map((challenge) => (
-                        <div class="flex gap-4 rounded-xl border border-slate-800 bg-slate-950/50 p-6">
+                        <div class="flex gap-4 rounded-lg border border-slate-800 bg-slate-950/50 p-6">
                             <div class="mt-1 h-2 w-2 shrink-0 rounded-full bg-amber-400 shadow-lg shadow-amber-400/30" />
                             <p class="text-slate-400 leading-relaxed">
                                 {challenge}
@@ -208,12 +246,29 @@ const { project } = Astro.props;
                 </div>
             </div>
             <div class="lg:col-span-2">
-                <SystemArch type={project.architecture.diagramType} />
-                <div class="mt-4 text-center text-slate-500 text-sm font-mono">
-                    Figure 1.0: {project.title} High-Level Architecture
-                </div>
+                {project.architecture.layers ? (
+                    <ArchitecturePipeline title={project.title} layers={project.architecture.layers} />
+                ) : (
+                    <>
+                        <SystemArch type={project.architecture.diagramType} />
+                        <div class="mt-4 text-center text-slate-500 text-sm font-mono">
+                            Figure 1.0: {project.title} High-Level Architecture
+                        </div>
+                    </>
+                )}
             </div>
         </div>
+
+        {project.architecture.decisions && (
+            <div class="grid md:grid-cols-2 gap-8 mt-12 pt-8 border-t border-slate-800">
+                {project.architecture.decisions.map((decision) => (
+                    <div>
+                        <h3 class="text-lg font-semibold text-white mb-3">{decision.title}</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">{decision.description}</p>
+                    </div>
+                ))}
+            </div>
+        )}
     </Section>
 
     <!-- User Flow -->

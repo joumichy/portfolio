@@ -2,8 +2,9 @@
 import Section from "./ui/Section.astro";
 import Card from "./ui/Card.astro";
 import Badge from "./ui/Badge.astro";
-import Button from "./ui/Button.astro";
 import { projects } from "../data/projects";
+
+const previewTechnologyCount = 6;
 ---
 
 <Section id="projects" title="Featured Projects">
@@ -13,11 +14,14 @@ import { projects } from "../data/projects";
         <a href={`/projects/${project.slug}`} class="block h-full">
           <Card class="flex flex-col h-full group overflow-hidden hover:scale-[1.02] transition-transform duration-300 cursor-pointer">
             <div class="flex-1">
-              <div class="flex justify-between items-start mb-4">
+              <div class="flex flex-col items-start gap-3 mb-4">
                 <h3 class="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">
                   {project.title}
                 </h3>
-                <div class="flex gap-2">
+                {project.subtitle && (
+                  <p class="text-sm font-medium text-sky-300">{project.subtitle}</p>
+                )}
+                <div class="flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <Badge text={tag} color="slate" />
                   ))}
@@ -31,9 +35,12 @@ import { projects } from "../data/projects";
 
             <div class="mt-auto pt-4 border-t border-slate-800">
               <div class="flex flex-wrap gap-2 mb-4">
-                {project.tech.map((t) => (
+                {project.tech.slice(0, previewTechnologyCount).map((t) => (
                   <Badge text={t} color="indigo" />
                 ))}
+                {project.tech.length > previewTechnologyCount && (
+                  <span class="text-xs text-slate-500 py-0.5">+{project.tech.length - previewTechnologyCount} technologies</span>
+                )}
               </div>
               <div class="flex items-center text-indigo-400 text-sm font-medium group-hover:translate-x-1 transition-transform">
                 View Case Study
