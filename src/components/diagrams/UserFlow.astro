@@ -30,7 +30,7 @@ const { steps } = Astro.props;
                 index % 2 === 0 ? "-right-2 border-l-8 border-l-slate-800" : "-left-2 border-r-8 border-r-slate-800"
             ]}></div>
 
-            <div class="flex items-center justify-between mb-2">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
                 <h3 class="text-lg font-bold text-white">{step.title}</h3>
                 <span class="text-xs font-mono text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Step 0{index + 1}</span>
             </div>
