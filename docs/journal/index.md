@@ -19,3 +19,11 @@
 
 - [2026-10-15 — Architecture delivery](2026-10-15-134914-architecture-delivery-61ed.md): commit/push/merge authorization,
   final scope and checks, including the AI & Machine Learning heading.
+
+- [2026-11-06 — Resume QR sharing](2026-11-06-084224-resume-qr-share.md): fullscreen
+  sharing dialog, build-time QR generation and stable PDF URL; build/type and QR
+  decoding checks passed, interactive browser and physical-phone checks pending.
+
+- [2026-11-06 — Resume QR delivery](2026-11-06-094222-resume-qr-delivery.md):
+  final “My Resume” CTA, real browser mobile/desktop checks and authorized
+  production delivery scope; GitHub PR and Actions own publication status.
