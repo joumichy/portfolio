@@ -1,4 +1,6 @@
 ---
+import { resumePath } from "../data/resume";
+
 const links = [
   { text: "Home", href: "/" },
   { text: "Skills", href: "/#skills" },
@@ -28,7 +30,7 @@ const links = [
 
     <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
       <a
-        href="/resume.pdf"
+        href={resumePath}
         target="_blank"
         rel="noopener noreferrer"
         class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-800 font-medium rounded-lg text-sm px-4 py-2 text-center transition-colors"

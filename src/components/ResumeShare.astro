@@ -1,0 +1,190 @@
+---
+import qrcode from "qrcode-generator";
+import { resumePath } from "../data/resume";
+import Button from "./ui/Button.astro";
+
+const resumeUrl = new URL(resumePath, Astro.site).href;
+const qrOptions = {
+  automaticVersion: 0,
+  errorCorrection: "M",
+  cellSize: 8,
+  quietZoneModules: 4,
+} as const;
+const qrCode = qrcode(qrOptions.automaticVersion, qrOptions.errorCorrection);
+qrCode.addData(resumeUrl);
+qrCode.make();
+const qrSvg = qrCode.createSvgTag({
+  cellSize: qrOptions.cellSize,
+  margin: qrOptions.cellSize * qrOptions.quietZoneModules,
+  scalable: true,
+});
+---
+
+<Button
+  variant="secondary"
+  type="button"
+  data-share-resume
+  aria-haspopup="dialog"
+  aria-controls="resume-share-dialog"
+  class="gap-2"
+>
+  <svg
+    aria-hidden="true"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="3" y="3" width="6" height="6" rx="1"></rect>
+    <rect x="15" y="3" width="6" height="6" rx="1"></rect>
+    <rect x="3" y="15" width="6" height="6" rx="1"></rect>
+    <path d="M15 15h2v2h-2zM21 15v3M15 21h3M21 21h.01"></path>
+  </svg>
+  My Resume
+</Button>
+
+<dialog
+  id="resume-share-dialog"
+  class="resume-share bg-slate-950 text-slate-200"
+  lang="fr"
+  aria-labelledby="resume-share-title"
+  aria-describedby="resume-share-description"
+>
+  <form method="dialog" class="flex justify-end">
+    <Button type="submit" variant="outline" class="gap-2" autofocus>
+      Fermer
+      <svg
+        aria-hidden="true"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="m6 6 12 12M6 18 18 6"></path>
+      </svg>
+    </Button>
+  </form>
+
+  <div class="resume-share-content">
+    <h2
+      id="resume-share-title"
+      class="text-2xl sm:text-3xl font-semibold tracking-tight text-white"
+    >
+      Scannez pour obtenir mon CV
+    </h2>
+    <div
+      class="resume-share-qr rounded-2xl bg-white shadow-xl shadow-indigo-500/10"
+      role="img"
+      aria-label={`QR code vers le CV PDF de John Allou : ${resumeUrl}`}
+      set:html={qrSvg}
+    />
+    <p
+      id="resume-share-description"
+      class="max-w-sm text-sm sm:text-base leading-relaxed text-slate-400"
+    >
+      Consultez ou téléchargez mon CV directement sur votre téléphone.
+    </p>
+  </div>
+</dialog>
+
+<style>
+  .resume-share {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    padding: 1rem;
+    padding: max(1rem, env(safe-area-inset-top))
+      max(1rem, env(safe-area-inset-right))
+      max(1rem, env(safe-area-inset-bottom))
+      max(1rem, env(safe-area-inset-left));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .resume-share[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .resume-share::backdrop {
+    background: var(--color-slate-950);
+  }
+
+  .resume-share-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 40rem;
+    margin-inline: auto;
+    padding-block: 1rem;
+    text-align: center;
+  }
+
+  .resume-share-qr {
+    flex-shrink: 0;
+    width: min(100%, 22rem, 52dvh);
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .resume-share-qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-height: 600px) {
+    .resume-share-content {
+      gap: 0.75rem;
+      padding-block: 0.75rem;
+    }
+
+    .resume-share-qr {
+      width: min(100%, 22rem, 44dvh);
+    }
+  }
+
+  :global(html.resume-share-open),
+  :global(html.resume-share-open body) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const selectors = {
+    trigger: "[data-share-resume]",
+    dialog: "#resume-share-dialog",
+  };
+  const events = { open: "click", close: "close" };
+  const scrollLockClass = "resume-share-open";
+  const shareButton = document.querySelector<HTMLButtonElement>(selectors.trigger);
+  const dialog = document.querySelector<HTMLDialogElement>(selectors.dialog);
+
+  if (shareButton && dialog) {
+    shareButton.addEventListener(events.open, () => {
+      dialog.showModal();
+      document.documentElement.classList.add(scrollLockClass);
+    });
+
+    dialog.addEventListener(events.close, () => {
+      document.documentElement.classList.remove(scrollLockClass);
+    });
+  }
+</script>
